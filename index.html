@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Shipping Quotation</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f0f2f5;
+    }
+    .container {
+        width: 85%;
+        margin: 30px auto;
+        padding: 25px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 10px;
+        color: #333;
+    }
+    select, input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s;
+    }
+    select:focus, input:focus {
+        border-color: #007bff;
+        outline: none;
+        background-color: #fff;
+    }
+    .row {
+        display: flex;
+        gap: 20px;
+        margin-top: 10px;
+    }
+    .row > div {
+        flex: 1;
+    }
+    .section-title {
+        margin-top: 20px;
+        font-size: 1.2em;
+        font-weight: bold;
+        background-color: #007bff;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .button, .add-button, .reset-button {
+        margin-top: 15px;
+        padding: 10px 16px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background-color 0.3s;
+    }
+    .button {
+        background-color: #007bff;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .add-button {
+        background-color: #28a745;
+    }
+    .add-button:hover {
+        background-color: #1e7e34;
+    }
+    .reset-button {
+        background-color: #6c757d;
+    }
+    .reset-button:hover {
+        background-color: #5a6268;
+    }
+    .cost-item {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        align-items: center;
+    }
+    .cost-item select, .cost-item input {
+        flex: 1;
+    }
+    .remove-button {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    #total-cost {
+        background-color: #eee;
+        font-weight: bold;
+    }
+    .dimensions-row > div {
+        flex: 0.33;
+    }
+    
+    .row > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    select, input {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 40px;
+    }
+    .row {
+        align-items: flex-start;
+    }
+    </style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<style>
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        background: #fff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        animation: fadeIn 0.7s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 12px 20px;
+        margin-top: 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+        background-color: #0056b3;
+        transform: scale(1.02);
+    }
+    .progress-container {
+        background: #eee;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        height: 10px;
+    }
+    .progress-bar {
+        background: #007bff;
+        height: 10px;
+        width: 0;
+        transition: width 0.3s ease;
+    }
+</style>
+<script>
+    function updateProgress() {
+        const inputs = document.querySelectorAll('input, select, textarea');
+        const filled = Array.from(inputs).filter(input => input.value.trim() !== '').length;
+        const total = inputs.length;
+        const percentage = Math.round((filled / total) * 100);
+        document.getElementById('progressBar').style.width = percentage + '%';
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('input', updateProgress);
+        });
+        document.body.insertAdjacentHTML('afterbegin', `
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        `);
+    });
+</script>
+
+
+<style>
+    body {
+        background: linear-gradient(135deg, #e8f0f7, #fdfdfd);
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        background: #fff;
+        padding: 35px 50px;
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+    input, select, textarea {
+        width: 100%;
+        padding: 14px;
+        margin-top: 8px;
+        border: 1px solid #dcdde1;
+        border-radius: 8px;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: 0.3s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 10px rgba(0,123,255,0.2);
+        outline: none;
+    }
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 14px 26px;
+        margin-top: 20px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .progress-container {
+        background: #ddd;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        height: 12px;
+    }
+    .progress-bar {
+        background: #007bff;
+        height: 12px;
+        width: 0;
+        transition: width 0.3s ease;
+    }
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #007bff;
+        border-radius: 10px;
+    }
+</style>
+
+
+<style>
+    select, .select2-container--default .select2-selection--single {
+        width: 100% !important;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #dcdde1;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: 0.3s ease;
+        background-color: #fff;
+    }
+    .select2-selection__rendered {
+        line-height: 36px !important;
+    }
+    .select2-selection__arrow {
+        height: 36px !important;
+    }
+</style>
+
+
+<style>
+    select, .select2-container--default .select2-selection--single {
+        width: 100% !important;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #dcdde1;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: 0.3s ease;
+        background-color: #fff;
+        height: 45px !important;
+        line-height: 1.5 !important;
+    }
+    .select2-selection__rendered {
+        line-height: 45px !important;
+        padding-left: 12px !important;
+        color: #2c3e50;
+    }
+    .select2-selection__arrow {
+        height: 45px !important;
+    }
+</style>
+
+
+<style>
+    input, select, textarea, .select2-selection__rendered {
+        text-align: center;
+        text-align-last: center;
+    }
+
+    input::placeholder, select, textarea {
+        color: #555;
+        font-weight: 500;
+    }
+</style>
+
+
+<style>
+    .select2-container--default .select2-selection--single {
+        display: flex !important;
+        align-items: center !important;
+        height: 45px !important;
+    }
+
+    .select2-selection__rendered {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        color: #2c3e50 !important;
+        font-weight: 500 !important;
+    }
+</style>
+
+
+<link rel="manifest" href="manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('service-worker.js');
+    });
+  }
+</script>
+</head>
+
+<body>
+<div class="container">
+<div class="section-group">
+<h2>Shipping Quotation</h2>
+<!-- القسم الأول -->
+<div class="row">
+<div>
+<label>Date:</label>
+<input id="date" placeholder="DD/MM/YYYY" readonly="" type="text"/>
+</div>
+<div>
+<label>Reference No:</label>
+<input id="reference-no" placeholder="Reference number" readonly="" type="text"/>
+</div>
+<div>
+<label>Sales Representative:</label>
+<select id="sales-rep">
+<option disabled="" selected="" value="">Select Sales Rep</option>
+<option>Ihab wahby</option>
+<option>Mohamed Aboubakr</option>
+<option>Sodaf Ashraf</option>
+</select>
+</div>
+</div>
+<div class="row">
+<div>
+<label>Company Name:</label>
+<input id="company-name" placeholder="Company name" type="text"/>
+</div>
+<div>
+<label>Attention:</label>
+<input id="attention" placeholder="Attention" type="text"/>
+</div>
+</div>
+<!-- القسم الثاني -->
+<div class="section-title">Shipment Details</div>
+<div class="row">
+<div>
+<label>Shipment Type:</label>
+<select id="shipment-type">
+<option disabled="" selected="" value="">Select Shipment Type</option>
+<option>FCL (Full Container Load)</option>
+<option>LCL (Less than Container Load)</option>
+<option>BB (Break Bulk)</option>
+</select>
+</div>
+<div>
+<label>Container Size:</label>
+<select id="container-size">
+<option disabled="" selected="" value="">Select Container Size</option>
+<option>20ft ST</option>
+<option>40ft ST</option>
+<option>40ft HC</option>
+<option>20ft OT</option>
+<option>40ft OT</option>
+<option>40ft FR</option>
+</select>
+</div>
+</div>
+<div class="row dimensions-row" id="dimensions-row" style="display:none;">
+<div>
+<label>Length (cm):</label>
+<input id="length" placeholder="Length in cm" type="number"/>
+</div>
+<div>
+<label>Width (cm):</label>
+<input id="width" placeholder="Width in cm" type="number"/>
+</div>
+<div>
+<label>Height (cm):</label>
+<input id="height" placeholder="Height in cm" type="number"/>
+</div>
+</div>
+<div class="row">
+<div>
+<label>Port of Loading:</label>
+<select id="port-loading">
+<option disabled="" selected="" value="">Select Port of Loading</option>
+<option>EGADA - ADABIYA - EGYPT</option>
+<option>EGAIS - AIN SUKHNA - EGYPT</option>
+<option>EGALY - ALEXANDRIA - EGYPT</option>
+<option>EGDAM - DAMIETTA - EGYPT</option>
+<option>EGEDK - EL DEKHEILA - EGYPT</option>
+<option>EGPSD - PORT SAID - EGYPT</option>
+<option>EGPSE - PORT SAID EAST - EGYPT</option>
+<option>EGSUZ - SUEZ - EGYPT</option>
+</select>
+</div>
+<div>
+<label>Port of Discharge:</label>
+<select id="port-discharge">
+<option disabled="" selected="" value="">Select Port of Discharge</option>
+<option value="AEAJM-AJMAN-UNITED ARAB EMIRATES">AEAJM - AJMAN - UNITED ARAB EMIRATES</option>
+<option value="AEAUH-ABU DHABI-UNITED ARAB EMIRATES">AEAUH - ABU DHABI - UNITED ARAB EMIRATES</option>
+<option value="AEDXB-DUBAI-UNITED ARAB EMIRATES">AEDXB - DUBAI - UNITED ARAB EMIRATES</option>
+<option value="AEFJR-FUJAIRAH-UNITED ARAB EMIRATES">AEFJR - FUJAIRAH - UNITED ARAB EMIRATES</option>
+<option value="AEJEA-JEBEL ALI-UNITED ARAB EMIRATES">AEJEA - JEBEL ALI - UNITED ARAB EMIRATES</option>
+<option value="AEKHL-KHALIFA PORT, ABU DHABI-UNITED ARAB EMIRATES">AEKHL - KHALIFA PORT, ABU DHABI - UNITED ARAB EMIRATES</option>
+<option value="AEKLF-KHOR AL FAKKAN-UNITED ARAB EMIRATES">AEKLF - KHOR AL FAKKAN - UNITED ARAB EMIRATES</option>
+<option value="ΑΕΜΚΗ-MINA KHALID-UNITED ARAB EMIRATES">ΑΕΜΚΗ - MINA KHALID - UNITED ARAB EMIRATES</option>
+<option value="AEP2K-PORT KHALID-UNITED ARAB EMIRATES">AEP2K - PORT KHALID - UNITED ARAB EMIRATES</option>
+<option value="AEPRA-PORT RASHID-UNITED ARAB EMIRATES">AEPRA - PORT RASHID - UNITED ARAB EMIRATES</option>
+<option value="AEQIW-UMM AL QAIWAIN-UNITED ARAB EMIRATES">AEQIW - UMM AL QAIWAIN - UNITED ARAB EMIRATES</option>
+<option value="AERKT-RAS AL KHAIMAH-UNITED ARAB EMIRATES">AERKT - RAS AL KHAIMAH - UNITED ARAB EMIRATES</option>
+<option value="AESHJ-SHARJAH-UNITED ARAB EMIRATES">AESHJ - SHARJAH - UNITED ARAB EMIRATES</option>
+<option value="AGSJO-ST JOHN'S-ANTIGUA AND BARBU">AGSJO - ST JOHN'S - ANTIGUA AND BARBU</option>
+<option value="ΑΙΑΧΑ-ANGUILLA-ANGUILLA">ΑΙΑΧΑ - ANGUILLA - ANGUILLA</option>
+<option value="AIRBY-ROAD BAY-ANGUILLA">AIRBY - ROAD BAY - ANGUILLA</option>
+<option value="ALDRZ-DURRES-ALBANIA">ALDRZ - DURRES - ALBANIA</option>
+<option value="AMEVN-YEREVAN-ARMENIA">AMEVN - YEREVAN - ARMENIA</option>
+<option value="ANBOJ-ORANJESTAD-NETHERLANDS ANTILLES">ANBOJ - ORANJESTAD - NETHERLANDS ANTILLES</option>
+<option value="ANCUR-CURACAO-NETHERLANDS ANTILLES">ANCUR - CURACAO - NETHERLANDS ANTILLES</option>
+<option value="ANKRA-KRALENDIJK, BONAIRE-NETHERLANDS ANTILLES">ANKRA - KRALENDIJK, BONAIRE - NETHERLANDS ANTILLES</option>
+<option value="ANPHI-PHILIPSBURG-NETHERLANDS ANTILLES">ANPHI - PHILIPSBURG - NETHERLANDS ANTILLES</option>
+<option value="ANSAB-FORT BAY, SABA-NETHERLANDS ANTILLES">ANSAB - FORT BAY, SABA - NETHERLANDS ANTILLES</option>
+<option value="ANWIL-WILLEMSTAD-NETHERLANDS ANTILLES">ANWIL - WILLEMSTAD - NETHERLANDS ANTILLES</option>
+<option value="AOCAB-CABINDA-ANGOLA">AOCAB - CABINDA - ANGOLA</option>
+<option value="AOLAD-LUANDA-ANGOLA">AOLAD - LUANDA - ANGOLA</option>
+<option value="AOLOB-LOBITO-ANGOLA">AOLOB - LOBITO - ANGOLA</option>
+<option value="AOMSZ-NAMIBE-ANGOLA">AOMSZ - NAMIBE - ANGOLA</option>
+<option value="AOSOQ-SOYO-QUINFUQUENA TERMINAL-ANGOLA">AOSOQ - SOYO-QUINFUQUENA TERMINAL - ANGOLA</option>
+<option value="ARBUE-BUENOS AIRES-ARGENTINA">ARBUE - BUENOS AIRES - ARGENTINA</option>
+<option value="ARLPS-LAS PALMAS-ARGENTINA">ARLPS - LAS PALMAS - ARGENTINA</option>
+<option value="ARORA-ORAN-ARGENTINA">ARORA - ORAN - ARGENTINA</option>
+<option value="ARPMY-PUERTO MADRYN-ARGENTINA">ARPMY - PUERTO MADRYN - ARGENTINA</option>
+<option value="ARRGA-RIO GRANDE-ARGENTINA">ARRGA - RIO GRANDE - ARGENTINA</option>
+<option value="ARROS-ROSARIO-ARGENTINA">ARROS - ROSARIO - ARGENTINA</option>
+<option value="ARUAQ-SAN JUAN-ARGENTINA">ARUAQ - SAN JUAN - ARGENTINA</option>
+<option value="ARUSH-USHUAIA-ARGENTINA">ARUSH - USHUAIA - ARGENTINA</option>
+<option value="ASPPG-PAGO PAGO-AMERICAN SAMOA">ASPPG - PAGO PAGO - AMERICAN SAMOA</option>
+<option value="ATVIE-VIENNA-AUSTRIA">ATVIE - VIENNA - AUSTRIA</option>
+<option value="AWBAR-BARCADERA-ARUBA">AWBAR - BARCADERA - ARUBA</option>
+<option value="AWORJ-ORANJESTAD-ARUBA">AWORJ - ORANJESTAD - ARUBA</option>
+<option value="AZBAK-BAKU-AZERBAIJAN">AZBAK - BAKU - AZERBAIJAN</option>
+<option value="BBBGI-BRIDGETOWN-BARBADOS">BBBGI - BRIDGETOWN - BARBADOS</option>
+<option value="BEANR-ANTWERP-BELGIUM">BEANR - ANTWERP - BELGIUM</option>
+<option value="BEB2E-TBA-BELGIUM">BEB2E - TBA - BELGIUM</option>
+<option value="BEBBY-BOMBAYE-BELGIUM">BEBBY - BOMBAYE - BELGIUM</option>
+<option value="BEGNE-TBA-BELGIUM">BEGNE - TBA - BELGIUM</option>
+<option value="BEGNK--BELGIUM">BEGNK -  - BELGIUM</option>
+<option value="BELGG-LIEGE-BELGIUM">BELGG - LIEGE - BELGIUM</option>
+<option value="BEMEC-MERCHTEM-BELGIUM">BEMEC - MERCHTEM - BELGIUM</option>
+<option value="BEMEH-MEERHOUT-BELGIUM">BEMEH - MEERHOUT - BELGIUM</option>
+<option value="BESGS-ST GEORGES-BELGIUM">BESGS - ST GEORGES - BELGIUM</option>
+<option value="BEZEE-ZEEBRUGGE-BELGIUM">BEZEE - ZEEBRUGGE - BELGIUM</option>
+<option value="BGBOJ-BURGAS-BULGARIA">BGBOJ - BURGAS - BULGARIA</option>
+<option value="BGVAR-VARNA-BULGARIA">BGVAR - VARNA - BULGARIA</option>
+<option value="BHBAH-BAHRAIN-BAHRAIN">BHBAH - BAHRAIN - BAHRAIN</option>
+<option value="BHKBS-KHALIFA BIN SALMAN PORT-BAHRAIN">BHKBS - KHALIFA BIN SALMAN PORT - BAHRAIN</option>
+<option value="BHMAN-MANAMA-BAHRAIN">BHMAN - MANAMA - BAHRAIN</option>
+<option value="BHMIN-MINA SULMAN-BAHRAIN">BHMIN - MINA SULMAN - BAHRAIN</option>
+<option value="BJCOO-COTONOU-BENIN">BJCOO - COTONOU - BENIN</option>
+<option value="BRAZA-AMAPA-BRAZIL">BRAZA - AMAPA - BRAZIL</option>
+<option value="BRBEL-BELEM-BRAZIL">BRBEL - BELEM - BRAZIL</option>
+<option value="BRFOR-FORTALEZA-BRAZIL">BRFOR - FORTALEZA - BRAZIL</option>
+<option value="BRIGI-ITAGUAI-BRAZIL">BRIGI - ITAGUAI - BRAZIL</option>
+<option value="BRIOA-ITAPOA, SC-BRAZIL">BRIOA - ITAPOA, SC - BRAZIL</option>
+<option value="BRIQI-ITAQUI, MA-BRAZIL">BRIQI - ITAQUI, MA - BRAZIL</option>
+<option value="BRITJ-ITAJAI-BRAZIL">BRITJ - ITAJAI - BRAZIL</option>
+<option value="BRMAO-MANAUS-BRAZIL">BRMAO - MANAUS - BRAZIL</option>
+<option value="BRMCP-MACAPA-BRAZIL">BRMCP - MACAPA - BRAZIL</option>
+<option value="BRMVS-MUCURI-BRAZIL">BRMVS - MUCURI - BRAZIL</option>
+<option value="BRNAT-NATAL-BRAZIL">BRNAT - NATAL - BRAZIL</option>
+<option value="BRNVT-NAVEGANTES-BRAZIL">BRNVT - NAVEGANTES - BRAZIL</option>
+<option value="BRPEC-PECEM-BRAZIL">BRPEC - PECEM - BRAZIL</option>
+<option value="BRPNG-PARANAGUA-BRAZIL">BRPNG - PARANAGUA - BRAZIL</option>
+<option value="BRPOA-PUERTO ALLEGRE-BRAZIL">BRPOA - PUERTO ALLEGRE - BRAZIL</option>
+<option value="BRREC-RECIFE-BRAZIL">BRREC - RECIFE - BRAZIL</option>
+<option value="BRRIG-RIO GRANDE-BRAZIL">BRRIG - RIO GRANDE - BRAZIL</option>
+<option value="BRRIO-RIO DE JANEIRO-BRAZIL">BRRIO - RIO DE JANEIRO - BRAZIL</option>
+<option value="BRSAN-SANTANA-BRAZIL">BRSAN - SANTANA - BRAZIL</option>
+<option value="BRSFS-SAO FRANCISCO DO SUL-BRAZIL">BRSFS - SAO FRANCISCO DO SUL - BRAZIL</option>
+<option value="BRSPB-SEPETIBA-BRAZIL">BRSPB - SEPETIBA - BRAZIL</option>
+<option value="BRSSA-SALVADOR DI BAHIA-BRAZIL">BRSSA - SALVADOR DI BAHIA - BRAZIL</option>
+<option value="BRSSZ-SANTOS-BRAZIL">BRSSZ - SANTOS - BRAZIL</option>
+<option value="BRSTM-SANTAREM-BRAZIL">BRSTM - SANTAREM - BRAZIL</option>
+<option value="BRSUA-SUAPE-BRAZIL">BRSUA - SUAPE - BRAZIL</option>
+<option value="BRVCO-VILA DO CONDE-BRAZIL">BRVCO - VILA DO CONDE - BRAZIL</option>
+<option value="BRVIX-VITORIA-BRAZIL">BRVIX - VITORIA - BRAZIL</option>
+<option value="BRVLC-VILA DO CONDE PB-BRAZIL">BRVLC - VILA DO CONDE PB - BRAZIL</option>
+<option value="BSFPO-FREEPORT GRAND BAHAMA-BAHAMAS">BSFPO - FREEPORT GRAND BAHAMA - BAHAMAS</option>
+<option value="BSNAS-NASSAU-BAHAMAS">BSNAS - NASSAU - BAHAMAS</option>
+<option value="BYMSQ-MINSK-BELARUS">BYMSQ - MINSK - BELARUS</option>
+<option value="BZBGK-BIG GREEK-BELIZE">BZBGK - BIG GREEK - BELIZE</option>
+<option value="BZBZE-BELIZE CITY-BELIZE">BZBZE - BELIZE CITY - BELIZE</option>
+<option value="CACAL-CALGARY, AB-CANADA">CACAL - CALGARY, AB - CANADA</option>
+<option value="CAFAL-FORT ALBANY, ON-CANADA">CAFAL - FORT ALBANY, ON - CANADA</option>
+<option value="CAFER-FORT ERIE, ON-CANADA">CAFER - FORT ERIE, ON - CANADA</option>
+<option value="CAHAL-HALIFAX-CANADA">CAHAL - HALIFAX - CANADA</option>
+<option value="CALAV-LAVAL, QC-CANADA">CALAV - LAVAL, QC - CANADA</option>
+<option value="CAMTR-MONTREAL-CANADA">CAMTR - MONTREAL - CANADA</option>
+<option value="CAPHL-PHILIPSBURG, OC-CANADA">CAPHL - PHILIPSBURG, OC - CANADA</option>
+<option value="CAPRR-PRINCE RUPERT-CANADA">CAPRR - PRINCE RUPERT - CANADA</option>
+<option value="CATOR-TORONTO-CANADA">CATOR - TORONTO - CANADA</option>
+<option value="CAVAN-VANCOUVER-CANADA">CAVAN - VANCOUVER - CANADA</option>
+<option value="CAWNP-WINNIPEG, MB-CANADA">CAWNP - WINNIPEG, MB - CANADA</option>
+<option value="CDBNW-BANANA-CONGO, DEMOCRATIC REPUBLIC">CDBNW - BANANA - CONGO, DEMOCRATIC REPUBLIC</option>
+<option value="CDBOA-BOMA-CONGO, DEMOCRATIC REPUBLIC">CDBOA - BOMA - CONGO, DEMOCRATIC REPUBLIC</option>
+<option value="CDMAT-MATADI-CONGO, DEMOCRATIC REPUBLIC">CDMAT - MATADI - CONGO, DEMOCRATIC REPUBLIC</option>
+<option value="CGBZV-BRAZZAVILLE-CONGO">CGBZV - BRAZZAVILLE - CONGO</option>
+<option value="CGPNR-POINTE NOIRE-CONGO">CGPNR - POINTE NOIRE - CONGO</option>
+<option value="CHAAB-AARBURG-SWITZERLAND">CHAAB - AARBURG - SWITZERLAND</option>
+<option value="CHAHF-ALTISHOFEN-SWITZERLAND">CHAHF - ALTISHOFEN - SWITZERLAND</option>
+<option value="CHBGF-BURGDORF-SWITZERLAND">CHBGF - BURGDORF - SWITZERLAND</option>
+<option value="CHBSL-BASEL-SWITZERLAND">CHBSL - BASEL - SWITZERLAND</option>
+<option value="CHEBC-EMMENBRUCKE-SWITZERLAND">CHEBC - EMMENBRUCKE - SWITZERLAND</option>
+<option value="CHGLA-GLARUS-SWITZERLAND">CHGLA - GLARUS - SWITZERLAND</option>
+<option value="CHGVA-GENEVE-SWITZERLAND">CHGVA - GENEVE - SWITZERLAND</option>
+<option value="CHLAU-LAUSANNE-SWITZERLAND">CHLAU - LAUSANNE - SWITZERLAND</option>
+<option value="CHLIT-ТВА-SWITZERLAND">CHLIT - ТВА - SWITZERLAND</option>
+<option value="CHZRH-ZURICH-SWITZERLAND">CHZRH - ZURICH - SWITZERLAND</option>
+<option value="CIABJ-ABIDJAN-COTE D IVOIRE">CIABJ - ABIDJAN - COTE D IVOIRE</option>
+<option value="CISPY-SAN PEDRO-COTE D IVOIRE">CISPY - SAN PEDRO - COTE D IVOIRE</option>
+<option value="CLANF-ANTOFAGASTA-CHILE">CLANF - ANTOFAGASTA - CHILE</option>
+<option value="CLARI-ARICA-CHILE">CLARI - ARICA - CHILE</option>
+<option value="CLCAS-CASABLANCA-CHILE">CLCAS - CASABLANCA - CHILE</option>
+<option value="CLCLD-CALDERA-CHILE">CLCLD - CALDERA - CHILE</option>
+<option value="CLCNR-CHANARAL-CHILE">CLCNR - CHANARAL - CHILE</option>
+<option value="CLIQQ-IQUIQUE-CHILE">CLIQQ - IQUIQUE - CHILE</option>
+<option value="CLLON-LIRQUEN-CHILE">CLLON - LIRQUEN - CHILE</option>
+<option value="CLLSQ-LOS ANGELES-CHILE">CLLSQ - LOS ANGELES - CHILE</option>
+<option value="CLPUQ-PUNTA ARENAS-CHILE">CLPUQ - PUNTA ARENAS - CHILE</option>
+<option value="CLSAI-SAN ANTONIO-CHILE">CLSAI - SAN ANTONIO - CHILE</option>
+<option value="CLSCL-SANTIAGO-CHILE">CLSCL - SANTIAGO - CHILE</option>
+<option value="CLSVE-SAN VICENTE-CHILE">CLSVE - SAN VICENTE - CHILE</option>
+<option value="CLTAL-TALCAHUANO-CHILE">CLTAL - TALCAHUANO - CHILE</option>
+<option value="CLVAP-VALPARAISO-CHILE">CLVAP - VALPARAISO - CHILE</option>
+<option value="CMDLA-DOUALA-CAMEROON">CMDLA - DOUALA - CAMEROON</option>
+<option value="CMKBI-KRIBI-CAMEROON">CMKBI - KRIBI - CAMEROON</option>
+<option value="COBAQ-BARRANQUILLA-COLOMBIA">COBAQ - BARRANQUILLA - COLOMBIA</option>
+<option value="COBUN-BUENAVENTURA-COLOMBIA">COBUN - BUENAVENTURA - COLOMBIA</option>
+<option value="COCTG-CARTAGENA-COLOMBIA">COCTG - CARTAGENA - COLOMBIA</option>
+<option value="COSMR-SANTA MARTA-COLOMBIA">COSMR - SANTA MARTA - COLOMBIA</option>
+<option value="COTRB-TURBO-COLOMBIA">COTRB - TURBO - COLOMBIA</option>
+<option value="CRCAL-PUERTO CALDERA-COSTA RICA">CRCAL - PUERTO CALDERA - COSTA RICA</option>
+<option value="CRLIO-PUERTO LIMON-COSTA RICA">CRLIO - PUERTO LIMON - COSTA RICA</option>
+<option value="CRMOB-MOIN, L-COSTA RICA">CRMOB - MOIN, L - COSTA RICA</option>
+<option value="CRSJO-SAN JOSE-COSTA RICA">CRSJO - SAN JOSE - COSTA RICA</option>
+<option value="CSBAR-BAR, CG-SERBIA AND MONTENEGRO">CSBAR - BAR, CG - SERBIA AND MONTENEGRO</option>
+<option value="CSBEG-BELGRADE, SR-SERBIA AND MONTENEGRO">CSBEG - BELGRADE, SR - SERBIA AND MONTENEGRO</option>
+<option value="CUHAV-HAVANA-CUBA">CUHAV - HAVANA - CUBA</option>
+<option value="CUMAR-MARIEL-CUBA">CUMAR - MARIEL - CUBA</option>
+<option value="CUSCU-SANTIAGO DE CUBA-CUBA">CUSCU - SANTIAGO DE CUBA - CUBA</option>
+<option value="CVMIN-MINDELO-CAPE VERDE">CVMIN - MINDELO - CAPE VERDE</option>
+<option value="CVRAI-PRAIA-CAPE VERDE">CVRAI - PRAIA - CAPE VERDE</option>
+<option value="CVRAI-PRAIA-CAPE VERDE">CVRAI - PRAIA - CAPE VERDE</option>
+<option value="CYFMG-FAMAGUSTA-CYPRUS">CYFMG - FAMAGUSTA - CYPRUS</option>
+<option value="CYLMS-LIMASSOL-CYPRUS">CYLMS - LIMASSOL - CYPRUS</option>
+<option value="CZKVC-KUNOVICE-CZECH REPUBLIC">CZKVC - KUNOVICE - CZECH REPUBLIC</option>
+<option value="CZPRG-PRAHA-CZECH REPUBLIC">CZPRG - PRAHA - CZECH REPUBLIC</option>
+<option value="CZRUD-RUDNA-CZECH REPUBLIC">CZRUD - RUDNA - CZECH REPUBLIC</option>
+<option value="DEAFT-ТВА-GERMANY">DEAFT - ТВА - GERMANY</option>
+<option value="DEBLH-BINDLACH-GERMANY">DEBLH - BINDLACH - GERMANY</option>
+<option value="DEBRE-BREMEN-GERMANY">DEBRE - BREMEN - GERMANY</option>
+<option value="DEBRV-BREMERHAVEN-GERMANY">DEBRV - BREMERHAVEN - GERMANY</option>
+<option value="DECEL-CELLE-GERMANY">DECEL - CELLE - GERMANY</option>
+<option value="DEDTM-DORTMUND-GERMANY">DEDTM - DORTMUND - GERMANY</option>
+<option value="DEDUI-DUISBURG-GERMANY">DEDUI - DUISBURG - GERMANY</option>
+<option value="DEHAM-HAMBURG-GERMANY">DEHAM - HAMBURG - GERMANY</option>
+<option value="DEKEL-KIEL-GERMANY">DEKEL - KIEL - GERMANY</option>
+<option value="DELBC-LUBECK-GERMANY">DELBC - LUBECK - GERMANY</option>
+<option value="DENHA-NORDENHAM-GERMANY">DENHA - NORDENHAM - GERMANY</option>
+<option value="DENUE-NURNBERG-GERMANY">DENUE - NURNBERG - GERMANY</option>
+<option value="DEROP-ROTHENBACH AN DER PEGNITZ-GERMANY">DEROP - ROTHENBACH AN DER PEGNITZ - GERMANY</option>
+<option value="DESTR-STUTTGART-GERMANY">DESTR - STUTTGART - GERMANY</option>
+<option value="DEZ2W-ZEESTOW-GERMANY">DEZ2W - ZEESTOW - GERMANY</option>
+<option value="DJJIB-DJIBOUTI-DJIBOUTI">DJJIB - DJIBOUTI - DJIBOUTI</option>
+<option value="DKAAL-AALBORG-DENMARK">DKAAL - AALBORG - DENMARK</option>
+<option value="DKAAR-AARHUS-DENMARK">DKAAR - AARHUS - DENMARK</option>
+<option value="DKAZS-AARS-DENMARK">DKAZS - AARS - DENMARK</option>
+<option value="DKCPH-COPENHAGEN-DENMARK">DKCPH - COPENHAGEN - DENMARK</option>
+<option value="DKEBJ-ESBJERG-DENMARK">DKEBJ - ESBJERG - DENMARK</option>
+<option value="DKFRC-FREDERICIA-DENMARK">DKFRC - FREDERICIA - DENMARK</option>
+<option value="DKODE-TBA-DENMARK">DKODE - TBA - DENMARK</option>
+<option value="DMBEL-BELFAST-DOMINICA">DMBEL - BELFAST - DOMINICA</option>
+<option value="DMRSU-ROSEAU-DOMINICA">DMRSU - ROSEAU - DOMINICA</option>
+<option value="DOCAU-CAUCEDO-DOMINICAN REPUBLIC">DOCAU - CAUCEDO - DOMINICAN REPUBLIC</option>
+<option value="DOHAI-RIO HAINA-DOMINICAN REPUBLIC">DOHAI - RIO HAINA - DOMINICAN REPUBLIC</option>
+<option value="DOSDO-SANTO DOMINGO-DOMINICAN REPUBLIC">DOSDO - SANTO DOMINGO - DOMINICAN REPUBLIC</option>
+<option value="DZAAE-ANNABA-ALGERIA">DZAAE - ANNABA - ALGERIA</option>
+<option value="DZAIG-ALGER-ALGERIA">DZAIG - ALGER - ALGERIA</option>
+<option value="DZBJA-BEJAIA-ALGERIA">DZBJA - BEJAIA - ALGERIA</option>
+<option value="DZDJE-DJEN DJEN-ALGERIA">DZDJE - DJEN DJEN - ALGERIA</option>
+<option value="DZGHA-GHAZAQUET-ALGERIA">DZGHA - GHAZAQUET - ALGERIA</option>
+<option value="DZGHZ-GHAZAQUET-ALGERIA">DZGHZ - GHAZAQUET - ALGERIA</option>
+<option value="DZMOS-MOSTAGANEM-ALGERIA">DZMOS - MOSTAGANEM - ALGERIA</option>
+<option value="DZORN-ORAN-ALGERIA">DZORN - ORAN - ALGERIA</option>
+<option value="DZSKI-SKIKDA-ALGERIA">DZSKI - SKIKDA - ALGERIA</option>
+<option value="ECGYE-GUAYAQUIL-ECUADOR">ECGYE - GUAYAQUIL - ECUADOR</option>
+<option value="ECLLD-LA LIBERTAD-ECUADOR">ECLLD - LA LIBERTAD - ECUADOR</option>
+<option value="ECMEC-MANTA-ECUADOR">ECMEC - MANTA - ECUADOR</option>
+<option value="EEMUG-MUUGA-ESTONIA">EEMUG - MUUGA - ESTONIA</option>
+<option value="EETLL-TALLINN-ESTONIA">EETLL - TALLINN - ESTONIA</option>
+<option value="EGADA-ADABIYA-EGYPT">EGADA - ADABIYA - EGYPT</option>
+<option value="EGAIS-AIN SUKHNA-EGYPT">EGAIS - AIN SUKHNA - EGYPT</option>
+<option value="EGALY-ALEXANDRIA-EGYPT">EGALY - ALEXANDRIA - EGYPT</option>
+<option value="EGDAM-DAMIETTA-EGYPT">EGDAM - DAMIETTA - EGYPT</option>
+<option value="EGEDK-EL DEKHEILA-EGYPT">EGEDK - EL DEKHEILA - EGYPT</option>
+<option value="EGPA1-PORT SAID TRANSHIPMENT-EGYPT">EGPA1 - PORT SAID TRANSHIPMENT - EGYPT</option>
+<option value="EGPSD-PORT SAID-EGYPT">EGPSD - PORT SAID - EGYPT</option>
+<option value="EGPSE-PORT SAID EAST-EGYPT">EGPSE - PORT SAID EAST - EGYPT</option>
+<option value="EGSOK-SOKHNA PORT NOT VALID-EGYPT">EGSOK - SOKHNA PORT NOT VALID - EGYPT</option>
+<option value="EGSUZ-SUEZ-EGYPT">EGSUZ - SUEZ - EGYPT</option>
+<option value="ERMSW-MASSAWA-ERITREA">ERMSW - MASSAWA - ERITREA</option>
+<option value="ES1AC-ARRECIFE-SPAIN">ES1AC - ARRECIFE - SPAIN</option>
+<option value="ESACE-ARRECIFE DE LANZAROTE-SPAIN">ESACE - ARRECIFE DE LANZAROTE - SPAIN</option>
+<option value="ESAGP-MALAGA-SPAIN">ESAGP - MALAGA - SPAIN</option>
+<option value="ESALC-ALICANTE-SPAIN">ESALC - ALICANTE - SPAIN</option>
+<option value="ESALG-ALGECIRAS-SPAIN">ESALG - ALGECIRAS - SPAIN</option>
+<option value="ESBCN-BARCELONA-SPAIN">ESBCN - BARCELONA - SPAIN</option>
+<option value="ESBIO-BILBAO-SPAIN">ESBIO - BILBAO - SPAIN</option>
+<option value="ESCAD-CADIZ-SPAIN">ESCAD - CADIZ - SPAIN</option>
+<option value="ESCAR-CARTAGENA-SPAIN">ESCAR - CARTAGENA - SPAIN</option>
+<option value="ESCEU-CEUTA-SPAIN">ESCEU - CEUTA - SPAIN</option>
+<option value="ESCXQ-COSLADA-SPAIN">ESCXQ - COSLADA - SPAIN</option>
+<option value="ESFUE-PUERTO DEL ROSARIO-SPAIN">ESFUE - PUERTO DEL ROSARIO - SPAIN</option>
+<option value="ESFUS-FUSTINANA-SPAIN">ESFUS - FUSTINANA - SPAIN</option>
+<option value="ESGIJ-GIJON-SPAIN">ESGIJ - GIJON - SPAIN</option>
+<option value="ESLCG-LA CORUNA-SPAIN">ESLCG - LA CORUNA - SPAIN</option>
+<option value="ESLPA-LAS PALMAS-SPAIN">ESLPA - LAS PALMAS - SPAIN</option>
+<option value="ESMAD-MADRID-SPAIN">ESMAD - MADRID - SPAIN</option>
+<option value="ESMLN-MELILLA-SPAIN">ESMLN - MELILLA - SPAIN</option>
+<option value="ESPBB-PASITO BLANCO, CANARY IS-SPAIN">ESPBB - PASITO BLANCO, CANARY IS - SPAIN</option>
+<option value="ESPMI-PALMA DE MALLORCA-SPAIN">ESPMI - PALMA DE MALLORCA - SPAIN</option>
+<option value="ESRAO-RIBARROJA-SPAIN">ESRAO - RIBARROJA - SPAIN</option>
+<option value="ESSAG-SAGUNTO-SPAIN">ESSAG - SAGUNTO - SPAIN</option>
+<option value="ESSCT-SANTA CRUZ DE TENERIFE-SPAIN">ESSCT - SANTA CRUZ DE TENERIFE - SPAIN</option>
+<option value="ESSEE-SESENA NUEVO-SPAIN">ESSEE - SESENA NUEVO - SPAIN</option>
+<option value="ESSPC-SANTA CRUZ LA PALMA-SPAIN">ESSPC - SANTA CRUZ LA PALMA - SPAIN</option>
+<option value="ESTAR-TARRAGONA-SPAIN">ESTAR - TARRAGONA - SPAIN</option>
+<option value="ESTCI-TENERIFE-SPAIN">ESTCI - TENERIFE - SPAIN</option>
+<option value="ESVGO-VIGO-SPAIN">ESVGO - VIGO - SPAIN</option>
+<option value="ESVLC-VALENCIA-SPAIN">ESVLC - VALENCIA - SPAIN</option>
+<option value="ESZAZ-ZARAGOZA-SPAIN">ESZAZ - ZARAGOZA - SPAIN</option>
+<option value="FIHEL - HELSINKI - FINLAND">FIHEL - HELSINKI - FINLAND</option>
+<option value="FIHMN - HAMINA - FINLAND">FIHMN - HAMINA - FINLAND</option>
+<option value="FIKEM - KEMI - FINLAND">FIKEM - KEMI - FINLAND</option>
+<option value="FIKTK - KOTKA - FINLAND">FIKTK - KOTKA - FINLAND</option>
+<option value="FIMTL - MANTTYLUOTO - FINLAND">FIMTL - MANTTYLUOTO - FINLAND</option>
+<option value="FIOUL - OULU - FINLAND">FIOUL - OULU - FINLAND</option>
+<option value="FIPRS - PIETARSAARII - FINLAND">FIPRS - PIETARSAARII - FINLAND</option>
+<option value="FIRAU - RAUMA - FINLAND">FIRAU - RAUMA - FINLAND</option>
+<option value="FITKU - TBA - FINLAND">FITKU - TBA - FINLAND</option>
+<option value="FITOR - TORNIO - FINLAND">FITOR - TORNIO - FINLAND</option>
+<option value="FOTHO - THORSHAVN - FAROE ISLANDS">FOTHO - THORSHAVN - FAROE ISLANDS</option>
+<option value="FRBAS - BASSENS,33 - FRANCE">FRBAS - BASSENS,33 - FRANCE</option>
+<option value="FRBES - BREST - FRANCE">FRBES - BREST - FRANCE</option>
+<option value="FRBLN - BAGNEAUX-SUR-LOING - FRANCE">FRBLN - BAGNEAUX-SUR-LOING - FRANCE</option>
+<option value="FRBOD - BORDEAUX - FRANCE">FRBOD - BORDEAUX - FRANCE</option>
+<option value="FRBSE - BASSENS - FRANCE">FRBSE - BASSENS - FRANCE</option>
+<option value="FRDKK - DUNKERQUE - FRANCE">FRDKK - DUNKERQUE - FRANCE</option>
+<option value="FRFOE - FOSSE - FRANCE">FRFOE - FOSSE - FRANCE</option>
+<option value="FRFOS - FOS SUR MER - FRANCE">FRFOS - FOS SUR MER - FRANCE</option>
+<option value="FRLEH - LE HAVRE - FRANCE">FRLEH - LE HAVRE - FRANCE</option>
+<option value="FRLIO -  - FRANCE">FRLIO -  - FRANCE</option>
+<option value="FRLPE - LA PALLICE - FRANCE">FRLPE - LA PALLICE - FRANCE</option>
+<option value="FRLRH - LA ROCHELLE - FRANCE">FRLRH - LA ROCHELLE - FRANCE</option>
+<option value="FRLVE - LE VERDON - FRANCE">FRLVE - LE VERDON - FRANCE</option>
+<option value="FRMET - MARSEILLETTE - FRANCE">FRMET - MARSEILLETTE - FRANCE</option>
+<option value="FRMRG - MARGUERITTES - FRANCE">FRMRG - MARGUERITTES - FRANCE</option>
+<option value="FRMRS - MARSEILLE - FRANCE">FRMRS - MARSEILLE - FRANCE</option>
+<option value="FRMTX - MONTOIR DE BRETAGNE - FRANCE">FRMTX - MONTOIR DE BRETAGNE - FRANCE</option>
+<option value="FRNTE - NANTES - FRANCE">FRNTE - NANTES - FRANCE</option>
+<option value="FRPA2 - PORT EDOUARD-HERRIOT, 69 - FRANCE">FRPA2 - PORT EDOUARD-HERRIOT, 69 - FRANCE</option>
+<option value="FRPOV - PORT VENDRES - FRANCE">FRPOV - PORT VENDRES - FRANCE</option>
+<option value="FRRAD - RADICATEL, 76 - FRANCE">FRRAD - RADICATEL, 76 - FRANCE</option>
+<option value="FRSET - SETE - FRANCE">FRSET - SETE - FRANCE</option>
+<option value="FRSOU - SOULTZ-HAUT-RHIN - FRANCE">FRSOU - SOULTZ-HAUT-RHIN - FRANCE</option>
+<option value="FRURO - ROUEN - FRANCE">FRURO - ROUEN - FRANCE</option>
+<option value="FRVES - VENISSIEUX - FRANCE">FRVES - VENISSIEUX - FRANCE</option>
+<option value="GALBV - LIBREVILLE - GABON">GALBV - LIBREVILLE - GABON</option>
+<option value="GAPOG - PORT GENTIL - GABON">GAPOG - PORT GENTIL - GABON</option>
+<option value="GBABD - ABERDEEN - UNITED KINGDOM">GBABD - ABERDEEN - UNITED KINGDOM</option>
+<option value="GBAVO - AVONMOUTH - UNITED KINGDOM">GBAVO - AVONMOUTH - UNITED KINGDOM</option>
+<option value="GBB2T - BRIDGETOWN - UNITED KINGDOM">GBB2T - BRIDGETOWN - UNITED KINGDOM</option>
+<option value="GBBEF - BEDFORD - UNITED KINGDOM">GBBEF - BEDFORD - UNITED KINGDOM</option>
+<option value="GBBEL - BELFAST - UNITED KINGDOM">GBBEL - BELFAST - UNITED KINGDOM</option>
+<option value="GBBHM - ТВА - UNITED KINGDOM">GBBHM - ТВА - UNITED KINGDOM</option>
+<option value="GBBRF - BRADFORD - UNITED KINGDOM">GBBRF - BRADFORD - UNITED KINGDOM</option>
+<option value="GBBRS - BRISTOL - UNITED KINGDOM">GBBRS - BRISTOL - UNITED KINGDOM</option>
+<option value="GBCDF - CARDIFF - UNITED KINGDOM">GBCDF - CARDIFF - UNITED KINGDOM</option>
+<option value="GBCRG - CRAIGAVON - UNITED KINGDOM">GBCRG - CRAIGAVON - UNITED KINGDOM</option>
+<option value="GBDON - DONCASTER - UNITED KINGDOM">GBDON - DONCASTER - UNITED KINGDOM</option>
+<option value="GBEDI - EDINBURGH - UNITED KINGDOM">GBEDI - EDINBURGH - UNITED KINGDOM</option>
+<option value="GBFXT - FELIXSTOWE - UNITED KINGDOM">GBFXT - FELIXSTOWE - UNITED KINGDOM</option>
+<option value="GBGRG - GRANGEMOUTH - UNITED KINGDOM">GBGRG - GRANGEMOUTH - UNITED KINGDOM</option>
+<option value="GBGRK - GREENOCK - UNITED KINGDOM">GBGRK - GREENOCK - UNITED KINGDOM</option>
+<option value="GBHFX - HALIFAX - UNITED KINGDOM">GBHFX - HALIFAX - UNITED KINGDOM</option>
+<option value="GBHUL - HULL - UNITED KINGDOM">GBHUL - HULL - UNITED KINGDOM</option>
+<option value="GBIMM - IMMINGHAM - UNITED KINGDOM">GBIMM - IMMINGHAM - UNITED KINGDOM</option>
+<option value="GBIOG - ISLE OF GRAIN - UNITED KINGDOM">GBIOG - ISLE OF GRAIN - UNITED KINGDOM</option>
+<option value="GBKIN - KINGSWOOD, SRY - UNITED KINGDOM">GBKIN - KINGSWOOD, SRY - UNITED KINGDOM</option>
+<option value="GBLBA - LEEDS - UNITED KINGDOM">GBLBA - LEEDS - UNITED KINGDOM</option>
+<option value="GBLIV - LIVERPOOL - UNITED KINGDOM">GBLIV - LIVERPOOL - UNITED KINGDOM</option>
+<option value="GBLON - LONDON - UNITED KINGDOM">GBLON - LONDON - UNITED KINGDOM</option>
+<option value="GBMNC - MANCHESTER - UNITED KINGDOM">GBMNC - MANCHESTER - UNITED KINGDOM</option>
+<option value="GBNCL - NEWCASTLE UPON TYNE - UNITED KINGDOM">GBNCL - NEWCASTLE UPON TYNE - UNITED KINGDOM</option>
+<option value="GBNTN - NUNEATON - UNITED KINGDOM">GBNTN - NUNEATON - UNITED KINGDOM</option>
+<option value="GBNWY - NEW YORK - UNITED KINGDOM">GBNWY - NEW YORK - UNITED KINGDOM</option>
+<option value="GBPFT - PURFLEET - UNITED KINGDOM">GBPFT - PURFLEET - UNITED KINGDOM</option>
+<option value="GBPME - PORTSMOUTH - UNITED KINGDOM">GBPME - PORTSMOUTH - UNITED KINGDOM</option>
+<option value="GBPOO - POOLE - UNITED KINGDOM">GBPOO - POOLE - UNITED KINGDOM</option>
+<option value="GBRTH - ROTHERHAM - UNITED KINGDOM">GBRTH - ROTHERHAM - UNITED KINGDOM</option>
+<option value="GBSHS - SHEERNESS - UNITED KINGDOM">GBSHS - SHEERNESS - UNITED KINGDOM</option>
+<option value="GBSOT - STOKE ON TRENT - UNITED KINGDOM">GBSOT - STOKE ON TRENT - UNITED KINGDOM</option>
+<option value="GBSOU - SOUTHAMPTON - UNITED KINGDOM">GBSOU - SOUTHAMPTON - UNITED KINGDOM</option>
+<option value="GBSSH - TBA - UNITED KINGDOM">GBSSH - TBA - UNITED KINGDOM</option>
+<option value="GBSUN - SUNDERLAND - UNITED KINGDOM">GBSUN - SUNDERLAND - UNITED KINGDOM</option>
+<option value="GBTEE - TEESPORT - UNITED KINGDOM">GBTEE - TEESPORT - UNITED KINGDOM</option>
+<option value="GBTEF - TELFORD - UNITED KINGDOM">GBTEF - TELFORD - UNITED KINGDOM</option>
+<option value="GBTHP - THAMES PORT - UNITED KINGDOM">GBTHP - THAMES PORT - UNITED KINGDOM</option>
+<option value="GBTIL - TILBURY - UNITED KINGDOM">GBTIL - TILBURY - UNITED KINGDOM</option>
+<option value="GDSTG - SAINT GEORGE'S - GRENADA">GDSTG - SAINT GEORGE'S - GRENADA</option>
+<option value="GEBUS - BATUMI - GEORGIA">GEBUS - BATUMI - GEORGIA</option>
+<option value="GEPTI - POTI - GEORGIA">GEPTI - POTI - GEORGIA</option>
+<option value="GFCAY - CAYENNE - FRENCH GUIANA">GFCAY - CAYENNE - FRENCH GUIANA</option>
+<option value="GFDDC - DEGRAD DES CANNES - FRENCH GUIANA">GFDDC - DEGRAD DES CANNES - FRENCH GUIANA</option>
+<option value="GHTEM - TEMA - GHANA">GHTEM - TEMA - GHANA</option>
+<option value="GHTKD - TAKORADI - GHANA">GHTKD - TAKORADI - GHANA</option>
+<option value="GIGIB - GIBRALTAR - GIBRALTAR">GIGIB - GIBRALTAR - GIBRALTAR</option>
+<option value="GMBJL - BANJUL - GAMBIA">GMBJL - BANJUL - GAMBIA</option>
+<option value="GNCKY - CONAKRY - GUINEA">GNCKY - CONAKRY - GUINEA</option>
+<option value="GPBBR - BASSE TERRE - GUADELOUPE">GPBBR - BASSE TERRE - GUADELOUPE</option>
+<option value="GPGUS - GUSTAVIA - GUADELOUPE">GPGUS - GUSTAVIA - GUADELOUPE</option>
+<option value="GPPTP - POINTE A PITRE - GUADELOUPE">GPPTP - POINTE A PITRE - GUADELOUPE</option>
+<option value="GPSBH - ST BARTHELEMY - GUADELOUPE">GPSBH - ST BARTHELEMY - GUADELOUPE</option>
+<option value="GPSFG - SAINT MARTIN APT - GUADELOUPE">GPSFG - SAINT MARTIN APT - GUADELOUPE</option>
+<option value="GQBSG - BATA - EQUATORIAL GUINEA">GQBSG - BATA - EQUATORIAL GUINEA</option>
+<option value="GQSSG - MALABO - EQUATORIAL GUINEA">GQSSG - MALABO - EQUATORIAL GUINEA</option>
+<option value="GRALX - ALEXANDRIA - GREECE">GRALX - ALEXANDRIA - GREECE</option>
+<option value="GRAST - ASTAKOS - GREECE">GRAST - ASTAKOS - GREECE</option>
+<option value="GRHER - HERAKLION - GREECE">GRHER - HERAKLION - GREECE</option>
+<option value="GRKRI - KRIONERI - GREECE">GRKRI - KRIONERI - GREECE</option>
+<option value="GRLAV - LAVRION - GREECE">GRLAV - LAVRION - GREECE</option>
+<option value="GRPIR - PIRAEUS - GREECE">GRPIR - PIRAEUS - GREECE</option>
+<option value="GRPTL - PORTO LAGOS - GREECE">GRPTL - PORTO LAGOS - GREECE</option>
+<option value="GRSKA - SKARAMANGA - GREECE">GRSKA - SKARAMANGA - GREECE</option>
+<option value="GRSKG - THESSALONIKI - GREECE">GRSKG - THESSALONIKI - GREECE</option>
+<option value="GRVOL - VOLOS - GREECE">GRVOL - VOLOS - GREECE</option>
+<option value="GTGUA - GUATEMALA CITY - GUATEMALA">GTGUA - GUATEMALA CITY - GUATEMALA</option>
+<option value="GTPBR - PUERTO BARRIOS - GUATEMALA">GTPBR - PUERTO BARRIOS - GUATEMALA</option>
+<option value="GTPRO - PUERTO QUETZAL - GUATEMALA">GTPRO - PUERTO QUETZAL - GUATEMALA</option>
+<option value="GTSTC - SANTO TOMAS DE CASTILLA - GUATEMALA">GTSTC - SANTO TOMAS DE CASTILLA - GUATEMALA</option>
+<option value="GWOXB - BISSAU - GUINEA-BISSAU">GWOXB - BISSAU - GUINEA-BISSAU</option>
+<option value="GWOXB - BISSAU - GUINEA-BISSAU">GWOXB - BISSAU - GUINEA-BISSAU</option>
+<option value="GYGEO - GEORGETOWN - GUYANA">GYGEO - GEORGETOWN - GUYANA</option>
+<option value="HNPCR - PUERTO CORTES - HONDURAS">HNPCR - PUERTO CORTES - HONDURAS</option>
+<option value="HNSAP - SAN PEDRO SULA - HONDURAS">HNSAP - SAN PEDRO SULA - HONDURAS</option>
+<option value="HNTGU - TEGUCIGALPA - HONDURAS">HNTGU - TEGUCIGALPA - HONDURAS</option>
+<option value="HRPLE - PLOCE - CROATIA">HRPLE - PLOCE - CROATIA</option>
+<option value="HRRJK - RIJEKA - CROATIA">HRRJK - RIJEKA - CROATIA</option>
+<option value="HRSPU - SPLIT - CROATIA">HRSPU - SPLIT - CROATIA</option>
+<option value="HRSUS - SUSAK - CROATIA">HRSUS - SUSAK - CROATIA</option>
+<option value="HRZAD - ZADAR - CROATIA">HRZAD - ZADAR - CROATIA</option>
+<option value="HRZAG - ZAGREB - CROATIA">HRZAG - ZAGREB - CROATIA</option>
+<option value="HTCAP - CAP HAITIEN - HAITI">HTCAP - CAP HAITIEN - HAITI</option>
+<option value="HTLFF - LAFITO.OU - HAITI">HTLFF - LAFITO.OU - HAITI</option>
+<option value="ΗΤΡΑΡ - PORT AU PRINCE - HAITI">ΗΤΡΑΡ - PORT AU PRINCE - HAITI</option>
+<option value="HUBUD - BUDAPEST - HUNGARY">HUBUD - BUDAPEST - HUNGARY</option>
+<option value="HUDEB - DEBRECEN - HUNGARY">HUDEB - DEBRECEN - HUNGARY</option>
+<option value="HUFOT - FOT - HUNGARY">HUFOT - FOT - HUNGARY</option>
+<option value="IECAV - CAVAN - IRELAND">IECAV - CAVAN - IRELAND</option>
+<option value="IEDRO - DROGHEDA - IRELAND">IEDRO - DROGHEDA - IRELAND</option>
+<option value="IEDUB - DUBLIN - IRELAND">IEDUB - DUBLIN - IRELAND</option>
+<option value="IELMK - LIMERICK - IRELAND">IELMK - LIMERICK - IRELAND</option>
+<option value="IEORK - CORK - IRELAND">IEORK - CORK - IRELAND</option>
+<option value="IEWAT - WATERFORD - IRELAND">IEWAT - WATERFORD - IRELAND</option>
+<option value="ILASH - ASHDOD - ISRAEL">ILASH - ASHDOD - ISRAEL</option>
+<option value="ILHFA - HAIFA - ISRAEL">ILHFA - HAIFA - ISRAEL</option>
+<option value="INBLR - BANGALORE, KA - INDIA">INBLR - BANGALORE, KA - INDIA</option>
+<option value="INBOM - MUMBAI - INDIA">INBOM - MUMBAI - INDIA</option>
+<option value="INCCU - KOLKATA - INDIA">INCCU - KOLKATA - INDIA</option>
+<option value="INCOK - COCHIN - INDIA">INCOK - COCHIN - INDIA</option>
+<option value="INDEL - NEW DELHI - INDIA">INDEL - NEW DELHI - INDIA</option>
+<option value="INDMT - DHARAMTAR CREEK - INDIA">INDMT - DHARAMTAR CREEK - INDIA</option>
+<option value="INDRI - DADRI, UP - INDIA">INDRI - DADRI, UP - INDIA</option>
+<option value="INFBD - FARIDABAD - INDIA">INFBD - FARIDABAD - INDIA</option>
+<option value="INGOI - GOA - INDIA">INGOI - GOA - INDIA</option>
+<option value="INHAL - HALDIA - INDIA">INHAL - HALDIA - INDIA</option>
+<option value="INICD - NEW DELHI, DL - INDIA">INICD - NEW DELHI, DL - INDIA</option>
+<option value="INIXE - MANGALORE - INDIA">INIXE - MANGALORE - INDIA</option>
+<option value="INIXY - KANDLA - INDIA">INIXY - KANDLA - INDIA</option>
+<option value="INKNU - KANPUR - INDIA">INKNU - KANPUR - INDIA</option>
+<option value="INMAA - CHENNAI - INDIA">INMAA - CHENNAI - INDIA</option>
+<option value="INMRM - MARMAGAO - INDIA">INMRM - MARMAGAO - INDIA</option>
+<option value="INMUN - MUNDRA - INDIA">INMUN - MUNDRA - INDIA</option>
+<option value="INNSA - NHAVA SHEVA - INDIA">INNSA - NHAVA SHEVA - INDIA</option>
+<option value="INPAV - PIPAVAV - INDIA">INPAV - PIPAVAV - INDIA</option>
+<option value="INTKD - TUGHLAKABAD - INDIA">INTKD - TUGHLAKABAD - INDIA</option>
+<option value="INTUT - TUTICORIN - INDIA">INTUT - TUTICORIN - INDIA</option>
+<option value="INVTZ - VISHAKHAPATNAM - INDIA">INVTZ - VISHAKHAPATNAM - INDIA</option>
+<option value="IQUOR - UMM QASR - IRAQ">IQUOR - UMM QASR - IRAQ</option>
+<option value="IRASA - ASALUYEH - IRAN">IRASA - ASALUYEH - IRAN</option>
+<option value="IRBKM - BANDAR KHOMEINI - IRAN">IRBKM - BANDAR KHOMEINI - IRAN</option>
+<option value="IRBND - BANDAR ABBAS - IRAN">IRBND - BANDAR ABBAS - IRAN</option>
+<option value="IRBSR - BANDAR SHAHID REJAIE SEZ - IRAN">IRBSR - BANDAR SHAHID REJAIE SEZ - IRAN</option>
+<option value="IRKHO - KHORRAMSHAHR - IRAN">IRKHO - KHORRAMSHAHR - IRAN</option>
+<option value="IRKIH - KISH ISLAND - IRAN">IRKIH - KISH ISLAND - IRAN</option>
+<option value="IRTBZ - TABRIZ - IRAN">IRTBZ - TABRIZ - IRAN</option>
+<option value="ISAKU - AKUREYRI - ICELAND">ISAKU - AKUREYRI - ICELAND</option>
+<option value="ISESK - ESKIFJORDHUR - ICELAND">ISESK - ESKIFJORDHUR - ICELAND</option>
+<option value="ISGRT - GRUNDARTANGI - ICELAND">ISGRT - GRUNDARTANGI - ICELAND</option>
+<option value="ISREY - REYKJAVIK - ICELAND">ISREY - REYKJAVIK - ICELAND</option>
+<option value="ISRFJ - REYDARFJORDUR - ICELAND">ISRFJ - REYDARFJORDUR - ICELAND</option>
+<option value="ITAOI - ANCONA - ITALY">ITAOI - ANCONA - ITALY</option>
+<option value="ITBDS - BRINDISI - ITALY">ITBDS - BRINDISI - ITALY</option>
+<option value="ITBRI - BARI - ITALY">ITBRI - BARI - ITALY</option>
+<option value="ITCAG - CAGLIARI - ITALY">ITCAG - CAGLIARI - ITALY</option>
+<option value="ITCAX - CASELLA/GENOVA - ITALY">ITCAX - CASELLA/GENOVA - ITALY</option>
+<option value="ITCTA - CATANIA - ITALY">ITCTA - CATANIA - ITALY</option>
+<option value="ITCVV - CIVITAVECCHIA - ITALY">ITCVV - CIVITAVECCHIA - ITALY</option>
+<option value="ITGIT - GIOIA TAURO - ITALY">ITGIT - GIOIA TAURO - ITALY</option>
+<option value="ITGOA - GENOA - ITALY">ITGOA - GENOA - ITALY</option>
+<option value="ITLIV - LIVORNO - ITALY">ITLIV - LIVORNO - ITALY</option>
+<option value="ITMIL - MILANO - ITALY">ITMIL - MILANO - ITALY</option>
+<option value="ITMSN - MESSINA - ITALY">ITMSN - MESSINA - ITALY</option>
+<option value="ITNAP - NAPOLI - ITALY">ITNAP - NAPOLI - ITALY</option>
+<option value="ITPCB - PESSANO CON BORNAGO - ITALY">ITPCB - PESSANO CON BORNAGO - ITALY</option>
+<option value="ITPMO - PALERME - ITALY">ITPMO - PALERMO - ITALY</option>
+<option value="ITPZL - POZZALLO - ITALY">ITPZL - POZZALLO - ITALY</option>
+<option value="ITRAN - RAVENNA - ITALY">ITRAN - RAVENNA - ITALY</option>
+<option value="ITRTO - ROVERETO - ITALY">ITRTO - ROVERETO - ITALY</option>
+<option value="ITSAL - SALERNO - ITALY">ITSAL - SALERNO - ITALY</option>
+<option value="ITSPE - LA SPEZIA - ITALY">ITSPE - LA SPEZIA - ITALY</option>
+<option value="ITTAR - TARANTO - ITALY">ITTAR - TARANTO - ITALY</option>
+<option value="ITTPS - TRAPANI - ITALY">ITTPS - TRAPANI - ITALY</option>
+<option value="ITTRI - TERMINI IMERESE - ITALY">ITTRI - TERMINI IMERESE - ITALY</option>
+<option value="ITTRS - TRIESTE - ITALY">ITTRS - TRIESTE - ITALY</option>
+<option value="ITTRT - TRENTO - ITALY">ITTRT - TRENTO - ITALY</option>
+<option value="ITVCE - VENEZIA - ITALY">ITVCE - VENEZIA - ITALY</option>
+<option value="ITVDL - VADO LIGURE - ITALY">ITVDL - VADO LIGURE - ITALY</option>
+<option value="ITVEN - VENTIMIGLIA - ITALY">ITVEN - VENTIMIGLIA - ITALY</option>
+<option value="ITVRN - VERONA - ITALY">ITVRN - VERONA - ITALY</option>
+<option value="JMKIN - KINGSTON - JAMAICA">JMKIN - KINGSTON - JAMAICA</option>
+<option value="JMMBJ - MONTEGO BAY - JAMAICA">JMMBJ - MONTEGO BAY - JAMAICA</option>
+<option value="JOAQB - AQABA FREE ZONE - JORDAN">JOAQB - AQABA FREE ZONE - JORDAN</option>
+<option value="JOAQJ - AQABA - JORDAN">JOAQJ - AQABA - JORDAN</option>
+<option value="KEEMB - EMBAKASI - KENYA">KEEMB - EMBAKASI - KENYA</option>
+<option value="KEMBA - MOMBASA - KENYA">KEMBA - MOMBASA - KENYA</option>
+<option value="KMDZA - DZAOUDZI - COMOROS">KMDZA - DZAOUDZI - COMOROS</option>
+<option value="KMMUT - MUTSAMUDU - COMOROS">KMMUT - MUTSAMUDU - COMOROS</option>
+<option value="KMYVA - MORONI - COMOROS">KMYVA - MORONI - COMOROS</option>
+<option value="KNBAS - BASSETERRE - SAINT KITTS AND NEV">KNBAS - BASSETERRE - SAINT KITTS AND NEV</option>
+<option value="KNNEV - CHARLESTOWN, NEVIS - SAINT KITTS AND NEV">KNNEV - CHARLESTOWN, NEVIS - SAINT KITTS AND NEV</option>
+<option value="KWKWI - KUWAIT - KUWAIT">KWKWI - KUWAIT - KUWAIT</option>
+<option value="KWSAA - SHUAIBA - KUWAIT">KWSAA - SHUAIBA - KUWAIT</option>
+<option value="KWSWK - SHUWAIKH - KUWAIT">KWSWK - SHUWAIKH - KUWAIT</option>
+<option value="KYGEC - GEORGETOWN, GRAND CAYMAN - CAYMAN ISLANDS">KYGEC - GEORGETOWN, GRAND CAYMAN - CAYMAN ISLANDS</option>
+<option value="KZPPK - PETROPAVLOVSK - KAZAKHSTAN">KZPPK - PETROPAVLOVSK - KAZAKHSTAN</option>
+<option value="LBBEY - BEIRUT - LEBANON">LBBEY - BEIRUT - LEBANON</option>
+<option value="LBBFZ - BEIRUT FREE ZONE - LEBANON">LBBFZ - BEIRUT FREE ZONE - LEBANON</option>
+<option value="LBKYE - TRIPOLI, LB - LEBANON">LBKYE - TRIPOLI, LB - LEBANON</option>
+<option value="LCCAS - CASTRIES - SAINT LUCIA">LCCAS - CASTRIES - SAINT LUCIA</option>
+<option value="LCSLU - CASTRIES, ST LUCIA APT - SAINT LUCIA">LCSLU - CASTRIES, ST LUCIA APT - SAINT LUCIA</option>
+<option value="LCVIF - VIEUX FORT - SAINT LUCIA">LCVIF - VIEUX FORT - SAINT LUCIA</option>
+<option value="LI1AA - SCHAAN - LIECHTENSTEIN">LI1AA - SCHAAN - LIECHTENSTEIN</option>
+<option value="LKCMB - COLOMBO - SRI LANKA">LKCMB - COLOMBO - SRI LANKA</option>
+<option value="LRMLW - MONROVIA - LIBERIA">LRMLW - MONROVIA - LIBERIA</option>
+<option value="LTKLJ - KLAIPEDA - LITHUANIA">LTKLJ - KLAIPEDA - LITHUANIA</option>
+<option value="LVRIX - RIGA - LATVIA">LVRIX - RIGA - LATVIA</option>
+<option value="LYSXL - ELKHOMS - LIBYAN ARAB JAMAHIRIYA">LYSXL - ELKHOMS - LIBYAN ARAB JAMAHIRIYA</option>
+<option value="LYBEN - BINGAZI - LIBYAN ARAB JAMAH">LYBEN - BINGAZI - LIBYAN ARAB JAMAHIRIYA</option>
+<option value="LYKHO - EL KHOMS - LIBYAN ARAB JAMAHIRIYA">LYKHO - EL KHOMS - LIBYAN ARAB JAMAHIRIYA</option>
+<option value="LYMRA - MISURATA - LIBYAN ARAB JAMAHIRIYA">LYMRA - MISURATA - LIBYAN ARAB JAMAHIRIYA</option>
+<option value="LYRLA - RAS LANUF - LIBYAN ARAB JAMAHIRIYA">LYRLA - RAS LANUF - LIBYAN ARAB JAMAHIRIYA</option>
+<option value="LYTIP - TRIPOLI - LIBYAN ARAB JAMAH">LYTIP - TRIPOLI - LIBYAN ARAB JAMAHIRIYA</option>
+<option value="MAAGA - AGADIR - MOROCCO">MAAGA - AGADIR - MOROCCO</option>
+<option value="MACAS - CASABLANCA - MOROCCO">MACAS - CASABLANCA - MOROCCO</option>
+<option value="MANDR - NADOR - MOROCCO">MANDR - NADOR - MOROCCO</option>
+<option value="MAPTM - TANGIER - MOROCCO">MAPTM - TANGIER - MOROCCO</option>
+<option value="MEBAR - BAR - MONTENEGRO">MEBAR - BAR - MONTENEGRO</option>
+<option value="MGBMD - BELO - MADAGASCAR">MGBMD - BELO - MADAGASCAR</option>
+<option value="MGDIE - ANTSIRANAΝΑ - MADAGASCAR">MGDIE - ANTSIRANAΝΑ - MADAGASCAR</option>
+<option value="MGEHL - PORT D'EHОТА - MADAGASCAR">MGEHL - PORT D'EHОТА - MADAGASCAR</option>
+<option value="MGFTU - FORT DAUPHIN - MADAGASCAR">MGFTU - FORT DAUPHIN - MADAGASCAR</option>
+<option value="MGMJN - MAJUNGA - MADAGASCAR">MGMJN - MAJUNGA - MADAGASCAR</option>
+<option value="MGMNJ - MANANJARY - MADAGASCAR">MGMNJ - MANANJARY - MADAGASCAR</option>
+<option value="MGMOQ - MORONDAVA - MADAGASCAR">MGMOQ - MORONDAVA - MADAGASCAR</option>
+<option value="MGNOS - NOSSI BE - MADAGASCAR">MGNOS - NOSSI BE - MADAGASCAR</option>
+<option value="MGTLE - TULEAR - MADAGASCAR">MGTLE - TULEAR - MADAGASCAR</option>
+<option value="MGTLN - TAOLAGNARO - MADAGASCAR">MGTLN - TAOLAGNARO - MADAGASCAR</option>
+<option value="MGTMM - TAMATAVE - MADAGASCAR">MGTMM - TAMATAVE - MADAGASCAR</option>
+<option value="MGTNR - ANTANANARIVO - MADAGASCAR">MGTNR - ANTANANARIVO - MADAGASCAR</option>
+<option value="MGTOA - TOAMASINA - MADAGASCAR">MGTOA - TOAMASINA - MADAGASCAR</option>
+<option value="MGVOH - VOHEMAR - MADAGASCAR">MGVOH - VOHEMAR - MADAGASCAR</option>
+<option value="MGWVK - MANAKARA - MADAGASCAR">MGWVK - MANAKARA - MADAGASCAR</option>
+<option value="MQFDF - FORT DE FRANCE - MARTINIQUE">MQFDF - FORT DE FRANCE - MARTINIQUE</option>
+<option value="MRNDB - NOUADHIBOU - MAURITANIA">MRNDB - NOUADHIBOU - MAURITANIA</option>
+<option value="MRNKC - NOUAKCHOTT - MAURITANIA">MRNKC - NOUAKCHOTT - MAURITANIA</option>
+<option value="MSLTB - LITTLE BAY - MONTSERRAT">MSLTB - LITTLE BAY - MONTSERRAT</option>
+<option value="MSPLY - PLYMOUTH - MONTSERRAT">MSPLY - PLYMOUTH - MONTSERRAT</option>
+<option value="MTMAR - MARSAXLOKK - MALTA">MTMAR - MARSAXLOKK - MALTA</option>
+<option value="MTMLA - MALTA(FREEPORT) - MALTA">MTMLA - MALTA(FREEPORT) - MALTA</option>
+<option value="MUPLU - PORT LOUIS - MAURITIUS">MUPLU - PORT LOUIS - MAURITIUS</option>
+<option value="MVMLE - MALE - MALDIVES">MVMLE - MALE - MALDIVES</option>
+<option value="MXATM - ALTAMIRA - MEXICO">MXATM - ALTAMIRA - MEXICO</option>
+<option value="MXESE - ENSENADA - MEXICO">MXESE - ENSENADA - MEXICO</option>
+<option value="MXLZC - LAZARO CARDENAS - MEXICO">MXLZC - LAZARO CARDENAS - MEXICO</option>
+<option value="MXMEX - TBA - MEXICO">MXMEX - TBA - MEXICO</option>
+<option value="MXPGO - PROGRESO - MEXICO">MXPGO - PROGRESO - MEXICO</option>
+<option value="MXPMS - PUERTO MORELOS - MEXICO">MXPMS - PUERTO MORELOS - MEXICO</option>
+<option value="MXQRO - QUERETARO - MEXICO">MXQRO - QUERETARO - MEXICO</option>
+<option value="MXTAM - TAMPICO - MEXICO">MXTAM - TAMPICO - MEXICO</option>
+<option value="MXTIJ - - MEXICO">MXTIJ - - MEXICO</option>
+<option value="MXTUX - TUXPAN - MEXICO">MXTUX - TUXPAN - MEXICO</option>
+<option value="MXVER - VERACRUZ - MEXICO">MXVER - VERACRUZ - MEXICO</option>
+<option value="MXZLO - MANZANILLO - MEXICO">MXZLO - MANZANILLO - MEXICO</option>
+<option value="MZBEW - BEIRA - MOZAMBIQUE">MZBEW - BEIRA - MOZAMBIQUE</option>
+<option value="MZMMW - MOMA - MOZAMBIQUE">MZMMW - MOMA - MOZAMBIQUE</option>
+<option value="MZMNC - NACALA - MOZAMBIQUE">MZMNC - NACALA - MOZAMBIQUE</option>
+<option value="MZMPM - MAPUTO - MOZAMBIQUE">MZMPM - MAPUTO - MOZAMBIQUE</option>
+<option value="MZPOL - PEMBA - MOZAMBIQUE">MZPOL - PEMBA - MOZAMBIQUE</option>
+<option value="MZUEL - QUELIMANE - MOZAMBIQUE">MZUEL - QUELIMANE - MOZAMBIQUE</option>
+<option value="NAWVB - WALVIS BAY - NAMIBIA">NAWVB - WALVIS BAY - NAMIBIA</option>
+<option value="NGAPP - APAPA - NIGERIA">NGAPP - APAPA - NIGERIA</option>
+<option value="NGCBQ - CALABAR - NIGERIA">NGCBQ - CALABAR - NIGERIA</option>
+<option value="NGLOS - LAGOS - NIGERIA">NGLOS - LAGOS - NIGERIA</option>
+<option value="NGONN - ONNE - NIGERIA">NGONN - ONNE - NIGERIA</option>
+<option value="NGPHC - PORT HARCOURT - NIGERIA">NGPHC - PORT HARCOURT - NIGERIA</option>
+<option value="NGTIN - TBA - NIGERIA">NGTIN - TBA - NIGERIA</option>
+<option value="NGWAR - WARRI - NIGERIA">NGWAR - WARRI - NIGERIA</option>
+<option value="NICIO - CORINTO - NICARAGUA">NICIO - CORINTO - NICARAGUA</option>
+<option value="NIMGA - MANAGUA - NICARAGUA">NIMGA - MANAGUA - NICARAGUA</option>
+<option value="NLAMS - AMSTERDAM - NETHERLANDS">NLAMS - AMSTERDAM - NETHERLANDS</option>
+<option value="NLMOE - MOERDIJK - NETHERLANDS">NLMOE - MOERDIJK - NETHERLANDS</option>
+<option value="NLRTM - ROTTERDAM - NETHERLANDS">NLRTM - ROTTERDAM - NETHERLANDS</option>
+<option value="NLTNZ - TERNEUZEN - NETHERLANDS">NLTNZ - TERNEUZEN - NETHERLANDS</option>
+<option value="NLVLI - VLISSINGEN - NETHERLANDS">NLVLI - VLISSINGEN - NETHERLANDS</option>
+<option value="NOAES - ALESUND - NORWAY">NOAES - ALESUND - NORWAY</option>
+<option value="NOALF - ALTA - NORWAY">NOALF - ALTA - NORWAY</option>
+<option value="NOBGO - BERGEN - NORWAY">NOBGO - BERGEN - NORWAY</option>
+<option value="NOBGO - BERGEN - NORWAY">NOBGO - BERGEN - NORWAY</option>
+<option value="NOBOO - BODO - NORWAY">NOBOO - BODO - NORWAY</option>
+<option value="NOBVK - BREVIK - NORWAY">NOBVK - BREVIK - NORWAY</option>
+<option value="NOD21 - TRONDHEIM - NORWAY">NOD21 - TRONDHEIM - NORWAY</option>
+<option value="NODRM - DRAMMEN - NORWAY">NODRM - DRAMMEN - NORWAY</option>
+<option value="NOEGE - EGERSUND - NORWAY">NOEGE - EGERSUND - NORWAY</option>
+<option value="NOFNE - FINNSNES - NORWAY">NOFNE - FINNSNES - NORWAY</option>
+<option value="NOFRK - FREDRIKSTAD - NORWAY">NOFRK - FREDRIKSTAD - NORWAY</option>
+<option value="NOFRO - FLORO - NORWAY">NOFRO - FLORO - NORWAY</option>
+<option value="NOGJM - GJEMNES - NORWAY">NOGJM - GJEMNES - NORWAY</option>
+<option value="NOHAL - HALDEN - NORWAY">NOHAL - HALDEN - NORWAY</option>
+<option value="NONAU - HAUGESUND - NORWAY">NONAU - HAUGESUND - NORWAY</option>
+<option value="NOHFT - HAMMERFEST - NORWAY">NOHFT - HAMMERFEST - NORWAY</option>
+<option value="NONVG - HONNINGSVAG - NORWAY">NONVG - HONNINGSVAG - NORWAY</option>
+<option value="NONKN - KIRKENES - NORWAY">NONKN - KIRKENES - NORWAY</option>
+<option value="NOKRS - KRISTIANSAND - NORWAY">NOKRS - KRISTIANSAND - NORWAY</option>
+<option value="NOKSU - KRISTIANSUND - NORWAY">NOKSU - KRISTIANSUND - NORWAY</option>
+<option value="NOKSV - KONGSVINGER - NORWAY">NOKSV - KONGSVINGER - NORWAY</option>
+<option value="NOLAR - LARVIK - NORWAY">NOLAR - LARVIK - NORWAY</option>
+<option value="NOMAY - MALOY - NORWAY">NOMAY - MALOY - NORWAY</option>
+<option value="NOMJF - MOSJOEN - NORWAY">NOMJF - MOSJOEN - NORWAY</option>
+<option value="NOMOL - MOLDE - NORWAY">NOMOL - MOLDE - NORWAY</option>
+<option value="NOMQN - MO I RANA - NORWAY">NOMQN - MO I RANA - NORWAY</option>
+<option value="NOMSS - MOSS - NORWAY">NOMSS - MOSS - NORWAY</option>
+<option value="NON20 - MOSS - NORWAY">NON20 - MOSS - NORWAY</option>
+<option value="NONYK - NARVIK - NORWAY">NONYK - NARVIK - NORWAY</option>
+<option value="NOORK - ORKANGER 16 - NORWAY">NOORK - ORKANGER 16 - NORWAY</option>
+<option value="NOOSL - OSLO - NORWAY">NOOSL - OSLO - NORWAY</option>
+<option value="NOSAS - SANDNES - NORWAY">NOSAS - SANDNES - NORWAY</option>
+<option value="NOSJA - HUSOY - NORWAY">NOSJA - HUSOY - NORWAY</option>
+<option value="NOSKE - SKIEN - NORWAY">NOSKE - SKIEN - NORWAY</option>
+<option value="NOSKY - SKJERVOY - NORWAY">NOSKY - SKJERVOY - NORWAY</option>
+<option value="NOSSJ - SANDNESSJOEN - NORWAY">NOSSJ - SANDNESSJOEN - NORWAY</option>
+<option value="NOSVG - STAVANGER - NORWAY">NOSVG - STAVANGER - NORWAY</option>
+<option value="NOSVJ - SVOLVAR - NORWAY">NOSVJ - SVOLVAR - NORWAY</option>
+<option value="NOTOS - TROMSO - NORWAY">NOTOS - TROMSO - NORWAY</option>
+<option value="NOTRD - TRONDHEIM - NORWAY">NOTRD - TRONDHEIM - NORWAY</option>
+<option value="NOVAO - VARDO - NORWAY">NOVAO - VARDO - NORWAY</option>
+<option value="NOVDS - VADSO - NORWAY">NOVDS - VADSO - NORWAY</option>
+<option value="OMDOM - DUQM - OMAN">OMDOM - DUQM - OMAN</option>
+<option value="OMMCT - MUSCAT - OMAN">OMMCT - MUSCAT - OMAN</option>
+<option value="OMMNO - MINA QABOOS - OMAN">OMMNO - MINA QABOOS - OMAN</option>
+<option value="OMRAY - RAYSUT - OMAN">OMRAY - RAYSUT - OMAN</option>
+<option value="OMSLL - SALALAH - OMAN">OMSLL - SALALAH - OMAN</option>
+<option value="OMSOH - SOHAR - OMAN">OMSOH - SOHAR - OMAN</option>
+<option value="PABLB - BALBOA - PANAMA">PABLB - BALBOA - PANAMA</option>
+<option value="PACFZ - COLON - PANAMA">PACFZ - COLON - PANAMA</option>
+<option value="PACTB - CRISTOBAL - PANAMA">PACTB - CRISTOBAL - PANAMA</option>
+<option value="PAMIT - MANZANILLO, PA - PANAMA">PAMIT - MANZANILLO, PA - PANAMA</option>
+<option value="PAONX -  - PANAMA">PAONX -  - PANAMA</option>
+<option value="PAPTY - PANAMA CITY - PANAMA">PAPTY - PANAMA CITY - PANAMA</option>
+<option value="PE1AE - ARICA MUELLE 7 - PERU">PE1AE - ARICA MUELLE 7 - PERU</option>
+<option value="PECHM - CHIMBOTE - PERU">PECHM - CHIMBOTE - PERU</option>
+<option value="PECLL - CALLAO - PERU">PECLL - CALLAO - PERU</option>
+<option value="PEILQ - ILO - PERU">PEILQ - ILO - PERU</option>
+<option value="PEMRI - MATARANI - PERU">PEMRI - MATARANI - PERU</option>
+<option value="PEPAI - PAITA - PERU">PEPAI - PAITA - PERU</option>
+<option value="PESVY - SALAVERRY - PERU">PESVY - SALAVERRY - PERU</option>
+<option value="PKBQM - PORT QASIM - PAKISTAN">PKBQM - PORT QASIM - PAKISTAN</option>
+<option value="PKKHI - KARACHI - PAKISTAN">PKKHI - KARACHI - PAKISTAN</option>
+<option value="PLGDN - GDANSK - POLAND">PLGDN - GDANSK - POLAND</option>
+<option value="PLGDY - GDYNIA - POLAND">PLGDY - GDYNIA - POLAND</option>
+<option value="PLKRK - KRAKOW - POLAND">PLKRK - KRAKOW - POLAND</option>
+<option value="PLMLA - MLAWA - POLAND">PLMLA - MLAWA - POLAND</option>
+<option value="PLPIA - PIASECZNO - POLAND">PLPIA - PIASECZNO - POLAND</option>
+<option value="PLPOZ - POZNAN - POLAND">PLPOZ - POZNAN - POLAND</option>
+<option value="PLSWI - SWINOUJSCIE - POLAND">PLSWI - SWINOUJSCIE - POLAND</option>
+<option value="PLSZZ - SZCZECIN - POLAND">PLSZZ - SZCZECIN - POLAND</option>
+<option value="PLWAW - TBA - POLAND">PLWAW - TBA - POLAND</option>
+<option value="PRGUO - GUAYNABO - PUERTO RICO">PRGUO - GUAYNABO - PUERTO RICO</option>
+<option value="PRPSE - PONCE - PUERTO RICO">PRPSE - PONCE - PUERTO RICO</option>
+<option value="PRSUJ - SAN JUAN - PUERTO RICO">PRSUJ - SAN JUAN - PUERTO RICO</option>
+<option value="PTCNL - CANICAL - PORTUGAL">PTCNL - CANICAL - PORTUGAL</option>
+<option value="PTCXO - CARTAXO - PORTUGAL">PTCXO - CARTAXO - PORTUGAL</option>
+<option value="PTFDF - FIGUEIRA DA FOZ - PORTUGAL">PTFDF - FIGUEIRA DA FOZ - PORTUGAL</option>
+<option value="PTFNC - FUNCHAL - PORTUGAL">PTFNC - FUNCHAL - PORTUGAL</option>
+<option value="PTLEI - LEIXOES - PORTUGAL">PTLEI - LEIXOES - PORTUGAL</option>
+<option value="PTLIS - LISBOA - PORTUGAL">PTLIS - LISBOA - PORTUGAL</option>
+<option value="PTOPO - TBA - PORTUGAL">PTOPO - TBA - PORTUGAL</option>
+<option value="PTSET - SETUBAL - PORTUGAL">PTSET - SETUBAL - PORTUGAL</option>
+<option value="PTSET - SETUBAL - PORTUGAL">PTSET - SETUBAL - PORTUGAL</option>
+<option value="PYASU - ASUNCION - PARAGUAY">PYASU - ASUNCION - PARAGUAY</option>
+<option value="QADOH - DOHA - QATAR">QADOH - DOHA - QATAR</option>
+<option value="QAE2A - MESAIEED NOT VALID - QATAR">QAE2A - MESAIEED NOT VALID - QATAR</option>
+<option value="QAHMD - HAMAD - QATAR">QAHMD - HAMAD - QATAR</option>
+<option value="QAMES - MESAIEED - QATAR">QAMES - MESAIEED - QATAR</option>
+<option value="QAUMS - UMM SAID - QATAR">QAUMS - UMM SAID - QATAR</option>
+<option value="RELPT - LE PORT - LA REUNION">RELPT - LE PORT - LA REUNION</option>
+<option value="REPDG - POINTE DES GALETS - LA REUNION">REPDG - POINTE DES GALETS - LA REUNION</option>
+<option value="RERUN - ST DENIS DE LA REUNION - LA REUNION">RERUN - ST DENIS DE LA REUNION - LA REUNION</option>
+<option value="ROBUH - BUCURESTI - ROMANIA">ROBUH - BUCURESTI - ROMANIA</option>
+<option value="ROCND - CONSTANZA - ROMANIA">ROCND - CONSTANZA - ROMANIA</option>
+<option value="RSBEG - BELGRADE, SR - SERBIA AND MONTENEGRO">RSBEG - BELGRADE, SR - SERBIA AND MONTENEGRO</option>
+<option value="RU9VY - TBA - RUSSIAN FEDERATION">RU9VY - TBA - RUSSIAN FEDERATION</option>
+<option value="RUARH - ARKHANGELSK - RUSSIAN FEDERATION">RUARH - ARKHANGELSK - RUSSIAN FEDERATION</option>
+<option value="RUBRK - BRONKA, SPE - RUSSIAN FEDERATION">RUBRK - BRONKA, SPE - RUSSIAN FEDERATION</option>
+<option value="RUKGD - KALININGRAD - RUSSIAN FEDERATION">RUKGD - KALININGRAD - RUSSIAN FEDERATION</option>
+<option value="RUKOR - KORSAKOV - RUSSIAN FEDERATION">RUKOR - KORSAKOV - RUSSIAN FEDERATION</option>
+<option value="RULED - SAINT PETERSBURG - RUSSIAN FEDERATION">RULED - SAINT PETERSBURG - RUSSIAN FEDERATION</option>
+<option value="RUMOW - MOSCOW - RUSSIAN FEDERATION">RUMOW - MOSCOW - RUSSIAN FEDERATION</option>
+<option value="RUNVS - NOVOROSSIYSK - RUSSIAN FEDERATION">RUNVS - NOVOROSSIYSK - RUSSIAN FEDERATION</option>
+<option value="RUTAG - TAGANROG - RUSSIAN FEDERATION">RUTAG - TAGANROG - RUSSIAN FEDERATION</option>
+<option value="RUULU - UST-LUGA - RUSSIAN FEDERATION">RUULU - UST-LUGA - RUSSIAN FEDERATION</option>
+<option value="RUVLA - VLADIKAVKAZ - RUSSIAN FEDERATION">RUVLA - VLADIKAVKAZ - RUSSIAN FEDERATION</option>
+<option value="RUVVO - VLADIVOSTOK - RUSSIAN FEDERATION">RUVVO - VLADIVOSTOK - RUSSIAN FEDERATION</option>
+<option value="RUVYP - VOSTOCHNY PORT - RUSSIAN FEDERATION">RUVYP - VOSTOCHNY PORT - RUSSIAN FEDERATION</option>
+<option value="SADMM - AD DAMMAM - SAUDI ARABIA">SADMM - AD DAMMAM - SAUDI ARABIA</option>
+<option value="SADMN - DAMMAN - SAUDI ARABIA">SADMN - DAMMAN - SAUDI ARABIA</option>
+<option value="SAJED - JEDDAH - SAUDI ARABIA">SAJED - JEDDAH - SAUDI ARABIA</option>
+<option value="SAJUB - JUBAIL - SAUDI ARABIA">SAJUB - JUBAIL - SAUDI ARABIA</option>
+<option value="SAR2P - RIYADH DRY PORT - SAUDI ARABIA">SAR2P - RIYADH DRY PORT - SAUDI ARABIA</option>
+<option value="SARUH - RIYADH - SAUDI ARABIA">SARUH - RIYADH - SAUDI ARABIA</option>
+<option value="SAYNB - YAMBU - SAUDI ARABIA">SAYNB - YAMBU - SAUDI ARABIA</option>
+<option value="SCMAW - MAHE - SEYCHELLES">SCMAW - MAHE - SEYCHELLES</option>
+<option value="SCPOV - PORT VICTORIA - SEYCHELLES">SCPOV - PORT VICTORIA - SEYCHELLES</option>
+<option value="SDPZU - PORT SUDAN - SUDAN">SDPZU - PORT SUDAN - SUDAN</option>
+<option value="SEAHU - AHUS - SWEDEN">SEAHU - AHUS - SWEDEN</option>
+<option value="SEGOT - GOTHENBURG - SWEDEN">SEGOT - GOTHENBURG - SWEDEN</option>
+<option value="SEGVX - GAEVLE - SWEDEN">SEGVX - GAEVLE - SWEDEN</option>
+<option value="SEHAD - HALMSTAD - SWEDEN">SEHAD - HALMSTAD - SWEDEN</option>
+<option value="SEHEL - HELSINGBORG - SWEDEN">SEHEL - HELSINGBORG - SWEDEN</option>
+<option value="SEMMA - MALMO - SWEDEN">SEMMA - MALMO - SWEDEN</option>
+<option value="SENRK - NORRKOPING - SWEDEN">SENRK - NORRKOPING - SWEDEN</option>
+<option value="SESDL - SUNDSVA - SWEDEN">SESDL - SUNDSVA - SWEDEN</option>
+<option value="SESOE - SOEDERTAELJE - SWEDEN">SESOE - SOEDERTAELJE - SWEDEN</option>
+<option value="SESTO - STOCKHOLM - SWEDEN">SESTO - STOCKHOLM - SWEDEN</option>
+<option value="SEVST - VASTERAS - SWEDEN">SEVST - VASTERAS - SWEDEN</option>
+<option value="SIKOP - KOPER - SLOVENIA">SIKOP - KOPER - SLOVENIA</option>
+<option value="SKBTS - BRATISLAVA - SLOVAKIA">SKBTS - BRATISLAVA - SLOVAKIA</option>
+<option value="SKLUE - LUCENEC - SLOVAKIA">SKLUE - LUCENEC - SLOVAKIA</option>
+<option value="SKNOV - NOVE ZAMKY - SLOVAKIA">SKNOV - NOVE ZAMKY - SLOVAKIA</option>
+<option value="SKSLV - SLADKOVICOVO - SLOVAKIA">SKSLV - SLADKOVICOVO - SLOVAKIA</option>
+<option value="SLFNA - FREETOWN - SIERRA LEONE">SLFNA - FREETOWN - SIERRA LEONE</option>
+<option value="SNDKR - DAKAR - SENEGAL">SNDKR - DAKAR - SENEGAL</option>
+<option value="SOBBO - BERBERA - SOMALIA">SOBBO - BERBERA - SOMALIA</option>
+<option value="SOMGQ - MOGADISHU - SOMALIA">SOMGQ - MOGADISHU - SOMALIA</option>
+<option value="SRPBM - PARAMARIBO - SURINAME">SRPBM - PARAMARIBO - SURINAME</option>
+<option value="STTMS - SAO TOME PRN - SAO TOME AND PRINCIPE">STTMS - SAO TOME PRN - SAO TOME AND PRINCIPE</option>
+<option value="SV1EV - ТВА - EL SALVADOR">SV1EV - ТВА - EL SALVADOR</option>
+<option value="SVAQJ - ACAJUTLA - EL SALVADOR">SVAQJ - ACAJUTLA - EL SALVADOR</option>
+<option value="SVSAL - SAN SALVADOR - EL SALVADOR">SVSAL - SAN SALVADOR - EL SALVADOR</option>
+<option value="SY9LA - ORIENT BRIDGE LE FOR A/ PURPOSE - SYRIAN ARAB REPUBLIC">SY9LA - ORIENT BRIDGE LE FOR A/ PURPOSE - SYRIAN ARAB REPUBLIC</option>
+<option value="SYLTK - LATTAKIA - SYRIAN ARAB REPUBLIC">SYLTK - LATTAKIA - SYRIAN ARAB REPUBLIC</option>
+<option value="SYTTS - TARTOUS - SYRIAN ARAB REPUBLIC">SYTTS - TARTOUS - SYRIAN ARAB REPUBLIC</option>
+<option value="TGLFW - LOME - TOGO">TGLFW - LOME - TOGO</option>
+<option value="TNBIZ - BIZERTE - TUNISIA">TNBIZ - BIZERTE - TUNISIA</option>
+<option value="TNLGN - LA GOULETTE - TUNISIA">TNLGN - LA GOULETTE - TUNISIA</option>
+<option value="TNRDS - RADES - TUNISIA">TNRDS - RADES - TUNISIA</option>
+<option value="TNSFA - SFAX - TUNISIA">TNSFA - SFAX - TUNISIA</option>
+<option value="TNSUS - SOUSSE - TUNISIA">TNSUS - SOUSSE - TUNISIA</option>
+<option value="TNTUN - TUNIS/RADES - TUNISIA">TNTUN - TUNIS/RADES - TUNISIA</option>
+<option value="TR6MP - ARMAPORT - TURKEY">TR6MP - ARMAPORT - TURKEY</option>
+<option value="TR8MD - MARDAS - TURKEY">TR8MD - MARDAS - TURKEY</option>
+<option value="TRALI - ALIAGA, IZMIR - TURKEY">TRALI - ALIAGA, IZMIR - TURKEY</option>
+<option value="TRAMB - ТВА - TURKEY">TRAMB - ТВА - TURKEY</option>
+<option value="TRAVC - ISTANBUL, AMBARLI PORT E. SIDE - TURKEY">TRAVC - ISTANBUL, AMBARLI PORT E. SIDE - TURKEY</option>
+<option value="TRAYT - ANTALYA - TURKEY">TRAYT - ANTALYA - TURKEY</option>
+<option value="TRCIG - - TURKEY">TRCIG - - TURKEY</option>
+<option value="TRDRC - DERINCE - TURKEY">TRDRC - DERINCE - TURKEY</option>
+<option value="TRGEB - GEBZE - TURKEY">TRGEB - GEBZE - TURKEY</option>
+<option value="TRGEM - GEMLIK - TURKEY">TRGEM - GEMLIK - TURKEY</option>
+<option value="TRHAY - HAYDARPASA ISTANBUL ASIAN SIDE - TURKEY">TRHAY - HAYDARPASA ISTANBUL ASIAN SIDE - TURKEY</option>
+<option value="TRISK - ISKENDERUN - TURKEY">TRISK - ISKENDERUN - TURKEY</option>
+<option value="TRIST - ISTANBUL - TURKEY">TRIST - ISTANBUL - TURKEY</option>
+<option value="TRIZM - IZMIR - TURKEY">TRIZM - IZMIR - TURKEY</option>
+<option value="TRIZT - IZMIT - TURKEY">TRIZT - IZMIT - TURKEY</option>
+<option value="TRKMX - KUMPORT - TURKEY">TRKMX - KUMPORT - TURKEY</option>
+<option value="TRMER - MERSIN - TURKEY">TRMER - MERSIN - TURKEY</option>
+<option value="TRMFZ - MERSIN-FREEZONE - TURKEY">TRMFZ - MERSIN-FREEZONE - TURKEY</option>
+<option value="TRSRY - SARIYER, 34 - TURKEY">TRSRY - SARIYER, 34 - TURKEY</option>
+<option value="TRSSX - SAMSUN - TURKEY">TRSSX - SAMSUN - TURKEY</option>
+<option value="TRTEK - TEKIRDAG - TURKEY">TRTEK - TEKIRDAG - TURKEY</option>
+<option value="TRTZX - TRABZON - TURKEY">TRTZX - TRABZON - TURKEY</option>
+<option value="TTPOS - PORT OF SPAIN - TRINIDAD AND TOBAGO">TTPOS - PORT OF SPAIN - TRINIDAD AND TOBAGO</option>
+<option value="TTPTP - POINTE-A-PIERRE - TRINIDAD AND TOBAGO">TTPTP - POINTE-A-PIERRE - TRINIDAD AND TOBAGO</option>
+<option value="TTPTS - POINT LISAS - TRINIDAD AND TOBAGO">TTPTS - POINT LISAS - TRINIDAD AND TOBAGO</option>
+<option value="TITAB - TOBAGO - TRINIDAD AND TOBAGO">TITAB - TOBAGO - TRINIDAD AND TOBAGO</option>
+<option value="TZDAR - DAR ES SALAAM - TANZANIA, UNITED REPUBLIC">TZDAR - DAR ES SALAAM - TANZANIA, UNITED REPUBLIC</option>
+<option value="TZMYW - MTWARA - TANZANIA, UNITED REPUBLIC">TZMYW - MTWARA - TANZANIA, UNITED REPUBLIC</option>
+<option value="TZTGT - TANGA - TANZANIA, UNITED REPUBLIC">TZTGT - TANGA - TANZANIA, UNITED REPUBLIC</option>
+<option value="TZZNZ - ZANZIBAR - TANZANIA, UNITED REPUBLIC">TZZNZ - ZANZIBAR - TANZANIA, UNITED REPUBLIC</option>
+<option value="UAE21 - ILYICHEVIS ""NOT VALID"" - UKRAINE">UAE21 - ILYICHEVIS ""NOT VALID"" - UKRAINE</option>
+<option value="UAIEV - KIEV - UKRAINE">UAIEV - KIEV - UKRAINE</option>
+<option value="UAILK - ILLYCHEVSK - UKRAINE">UAILK - ILLYCHEVSK - UKRAINE</option>
+<option value="UAM2P - TBA - UKRAINE">UAM2P - TBA - UKRAINE</option>
+<option value="UAMPW - MARIUPOL - UKRAINE">UAMPW - MARIUPOL - UKRAINE</option>
+<option value="UAODS - ODESSA - UKRAINE">UAODS - ODESSA - UKRAINE</option>
+<option value="USATL - ATLANTA, GA - UNITED STATES">USATL - ATLANTA, GA - UNITED STATES</option>
+<option value="USAXR - ALEXANDRIA, VA - UNITED STATES">USAXR - ALEXANDRIA, VA - UNITED STATES</option>
+<option value="USBAL - BALTIMORE, MD - UNITED STATES">USBAL - BALTIMORE, MD - UNITED STATES</option>
+<option value="USBOS - BOSTON, MΜΑ - UNITED STATES">USBOS - BOSTON, MΜΑ - UNITED STATES</option>
+<option value="USBWI - BALTIMORE.MD - UNITED STATES">USBWI - BALTIMORE.MD - UNITED STATES</option>
+<option value="USCHI - CHICAGO, IL - UNITED STATES">USCHI - CHICAGO, IL - UNITED STATES</option>
+<option value="USCHM - CHAMPLAIN, NY - UNITED STATES">USCHM - CHAMPLAIN, NY - UNITED STATES</option>
+<option value="USCHS - CHARLESTON, SC - UNITED STATES">USCHS - CHARLESTON, SC - UNITED STATES</option>
+<option value="USCLE - CLEVELAND, OH - UNITED STATES">USCLE - CLEVELAND, OH - UNITED STATES</option>
+<option value="USCLT - CHARLOTTE, NC - UNITED STATES">USCLT - CHARLOTTE, NC - UNITED STATES</option>
+<option value="USDET - TBA - UNITED STATES">USDET - TBA - UNITED STATES</option>
+<option value="USDTT - ТВА - UNITED STATES">USDTT - ТВА - UNITED STATES</option>
+<option value="USEDN - EDISON, NJ - UNITED STATES">USEDN - EDISON, NJ - UNITED STATES</option>
+<option value="USESL - EAST SAINT LOUIS, IL - UNITED STATES">USESL - EAST SAINT LOUIS, IL - UNITED STATES</option>
+<option value="USEVI - TBA - UNITED STATES">USEVI - TBA - UNITED STATES</option>
+<option value="USFAT - FRESNO, CA - UNITED STATES">USFAT - FRESNO, CA - UNITED STATES</option>
+<option value="USGEN - GENEVA, NY - UNITED STATES">USGEN - GENEVA, NY - UNITED STATES</option>
+<option value="USHNL - HONOLULU, HI - UNITED STATES">USHNL - HONOLULU, HI - UNITED STATES</option>
+<option value="USHOU - HOUSTON, TX - UNITED STATES">USHOU - HOUSTON, TX - UNITED STATES</option>
+<option value="USHSM - HOUSTON, MS - UNITED STATES">USHSM - HOUSTON, MS - UNITED STATES</option>
+<option value="USHZL - HAZLETON, PA - UNITED STATES">USHZL - HAZLETON, PA - UNITED STATES</option>
+<option value="USIDC - INDEPENDENCE, VA - UNITED STATES">USIDC - INDEPENDENCE, VA - UNITED STATES</option>
+<option value="USJAX - JACKSONVILLE,FL - UNITED STATES">USJAX - JACKSONVILLE,FL - UNITED STATES</option>
+<option value="USLAL - LAKELAND, FL - UNITED STATES">USLAL - LAKELAND, FL - UNITED STATES</option>
+<option value="USLAX - LOS ANGELES, CA - UNITED STATES">USLAX - LOS ANGELES, CA - UNITED STATES</option>
+<option value="USLGB - LONG BEACH,CA - UNITED STATES">USLGB - LONG BEACH,CA - UNITED STATES</option>
+<option value="USLTD - LITCHFIELD, MI - UNITED STATES">USLTD - LITCHFIELD, MI - UNITED STATES</option>
+<option value="USLUI - TBA - UNITED STATES">USLUI - TBA - UNITED STATES</option>
+<option value="USLZB - LISBON, IA - UNITED STATES">USLZB - LISBON, IA - UNITED STATES</option>
+<option value="USMAM - MIAMIVILLE, OH - UNITED STATES">USMAM - MIAMIVILLE, OH - UNITED STATES</option>
+<option value="USMIA - MIAMI, FL - UNITED STATES">USMIA - MIAMI, FL - UNITED STATES</option>
+<option value="USMIO - MIAMI, OK - UNITED STATES">USMIO - MIAMI, OK - UNITED STATES</option>
+<option value="USMIQ - MILAN, IL - UNITED STATES">USMIQ - MILAN, IL - UNITED STATES</option>
+<option value="USMOB - MOBILE, AL - UNITED STATES">USMOB - MOBILE, AL - UNITED STATES</option>
+<option value="USMSY - NEW ORLEANS, LA - UNITED STATES">USMSY - NEW ORLEANS, LA - UNITED STATES</option>
+<option value="USNFK - TBA - UNITED STATES">USNFK - TBA - UNITED STATES</option>
+<option value="USNNS - NEWPORT NEWS, VA - UNITED STATES">USNNS - NEWPORT NEWS, VA - UNITED STATES</option>
+<option value="USNYC - NEW YORK, NY - UNITED STATES">USNYC - NEW YORK, NY - UNITED STATES</option>
+<option value="USOAK - OAKLAND, CA - UNITED STATES">USOAK - OAKLAND, CA - UNITED STATES</option>
+<option value="USORF - NORFOLK, VA - UNITED STATES">USORF - NORFOLK, VA - UNITED STATES</option>
+<option value="USORH - - UNITED STATES">USORH -  - UNITED STATES</option>
+<option value="USPBI - WEST PALM BEACH, FL - UNITED STATES">USPBI - WEST PALM BEACH, FL - UNITED STATES</option>
+<option value="USPDX - PORTLAND OR - UNITED STATES">USPDX - PORTLAND OR - UNITED STATES</option>
+<option value="USPEF - PORT EVERGLADES - UNITED STATES">USPEF - PORT EVERGLADES - UNITED STATES</option>
+<option value="USPHL - PHILADELPHIA, PA - UNITED STATES">USPHL - PHILADELPHIA, PA - UNITED STATES</option>
+<option value="USPHX - PHOENIX, AZ - UNITED STATES">USPHX - PHOENIX, AZ - UNITED STATES</option>
+<option value="USPIE - ST PETERSBURG, FL - UNITED STATES">USPIE - ST PETERSBURG, FL - UNITED STATES</option>
+<option value="USONH - TBA - UNITED STATES">USONH - TBA - UNITED STATES</option>
+<option value="USSAT - SAN ANTONIO, TX - UNITED STATES">USSAT - SAN ANTONIO, TX - UNITED STATES</option>
+<option value="USSAV - SAVANNAH, GA - UNITED STATES">USSAV - SAVANNAH, GA - UNITED STATES</option>
+<option value="USSEA - SEATTLE, WA - UNITED STATES">USSEA - SEATTLE, WA - UNITED STATES</option>
+<option value="USSFO - SAN FRANCISCO - UNITED STATES">USSFO - SAN FRANCISCO - UNITED STATES</option>
+<option value="USSJC - SAN JOSE, CA - UNITED STATES">USSJC - SAN JOSE, CA - UNITED STATES</option>
+<option value="USSJN - ST JOHNS, AZ - UNITED STATES">USSJN - ST JOHNS, AZ - UNITED STATES</option>
+<option value="USTEF - - UNITED STATES">USTEF -  - UNITED STATES</option>
+<option value="USTIW - TACOMA WA - UNITED STATES">USTIW - TACOMA WA - UNITED STATES</option>
+<option value="USTPA - TAMPA, FL - UNITED STATES">USTPA - TAMPA, FL - UNITED STATES</option>
+<option value="USUAY - ALGIERS, LA - UNITED STATES">USUAY - ALGIERS, LA - UNITED STATES</option>
+<option value="USVAB - VIRGINIA BEACH, VA - UNITED STATES">USVAB - VIRGINIA BEACH, VA - UNITED STATES</option>
+<option value="USXEA - CONCORD, NC - UNITED STATES">USXEA - CONCORD, NC - UNITED STATES</option>
+<option value="USZGT - CONCORD, NC - UNITED STATES">USZGT - CONCORD, NC - UNITED STATES</option>
+<option value="UYMVD - MONTEVIDEO - URUGUAY">UYMVD - MONTEVIDEO - URUGUAY</option>
+<option value="UZTAS - TASHKENT - UZBEKISTAN">UZTAS - TASHKENT - UZBEKISTAN</option>
+<option value="VCCRP - CAMDEN PARK - SAINT VINCENT AND GRN">VCCRP - CAMDEN PARK - SAINT VINCENT AND GRN</option>
+<option value="VCKTN - KINGSTOWN - SAINT VINCENT AND GRN">VCKTN - KINGSTOWN - SAINT VINCENT AND GRN</option>
+<option value="VECCS - CARACAS - VENEZUELA">VECCS - CARACAS - VENEZUELA</option>
+<option value="VEEGU - EL GUAMACHE - VENEZUELA">VEEGU - EL GUAMACHE - VENEZUELA</option>
+<option value="VEETV - EL TABLAZO/MARACAIBOL - VENEZUELA">VEETV - EL TABLAZO/MARACAIBOL - VENEZUELA</option>
+<option value="VEGUB - GUARANAO - VENEZUELA">VEGUB - GUARANAO - VENEZUELA</option>
+<option value="VEGUT - GUANTA - VENEZUELA">VEGUT - GUANTA - VENEZUELA</option>
+<option value="VELAG - LA GUAIRA - VENEZUELA">VELAG - LA GUAIRA - VENEZUELA</option>
+<option value="VEMAR - MARACAIBO - VENEZUELA">VEMAR - MARACAIBO - VENEZUELA</option>
+<option value="VEPBL - PUERTO CABELLO - VENEZUELA">VEPBL - PUERTO CABELLO - VENEZUELA</option>
+<option value="VESVZ - SAN ANTONIO - VENEZUELA">VESVZ - SAN ANTONIO - VENEZUELA</option>
+<option value="VEVLN - VALENCIA - VENEZUELA">VEVLN - VALENCIA - VENEZUELA</option>
+<option value="VG1AH - SPANISH TOWN - VIRGIN ISLANDS, BRITISH">VG1AH - SPANISH TOWN - VIRGIN ISLANDS, BRITISH</option>
+<option value="VGRAD - ROAD TOWN - VIRGIN ISLANDS, BRITISH">VGRAD - ROAD TOWN - VIRGIN ISLANDS, BRITISH</option>
+<option value="VGTOV - TBA - VIRGIN ISLANDS, BRITISH">VGTOV - TBA - VIRGIN ISLANDS, BRITISH</option>
+<option value="VICHA - CHARLOTTE AMALIE, ST THOMAS - VIRGIN ISLANDS US">VICHA - CHARLOTTE AMALIE, ST THOMAS - VIRGIN ISLANDS US</option>
+<option value="VICTD - CHRISTIANSTED - VIRGIN ISLANDS US">VICTD - CHRISTIANSTED - VIRGIN ISLANDS US</option>
+<option value="VICZB - CRUZ BAY - VIRGIN ISLANDS, US">VICZB - CRUZ BAY - VIRGIN ISLANDS, US</option>
+<option value="VIFRD - FREDERIKSTED - VIRGIN ISLANDS, US">VIFRD - FREDERIKSTED - VIRGIN ISLANDS, US</option>
+<option value="VISTT - SAINT THOMAS - VIRGIN ISLANDS, US">VISTT - SAINT THOMAS - VIRGIN ISLANDS, US</option>
+<option value="VISTX - SAINT CROIX - VIRGIN ISLANDS, US">VISTX - SAINT CROIX - VIRGIN ISLANDS, US</option>
+<option value="YEADE - ADEN - YEMEN">YEADE - ADEN - YEMEN</option>
+<option value="YEHOD - HODEIDAH - YEMEN">YEHOD - HODEIDAH - YEMEN</option>
+<option value="YEMKX - MUKALLA - YEMEN">YEMKX - MUKALLA - YEMEN</option>
+<option value="YEMOK - MOKHA - YEMEN">YEMOK - MOKHA - YEMEN</option>
+<option value="YTDZA - DZAOUDZI - Mayotte">YTDZA - DZAOUDZI - Mayotte</option>
+<option value="YTLON - LONGONI - MAYOTTE">YTLON - LONGONI - MAYOTTE</option>
+<option value="YTMAM - MAMOUDZOU - MAYOTTE">YTMAM - MAMOUDZOU - MAYOTTE</option>
+<option value="YUBAR - BAR - YUGOSLAVIA">YUBAR - BAR - YUGOSLAVIA</option>
+<option value="ZACPT - CAPE TOWN - SOUTH AFRICA">ZACPT - CAPE TOWN - SOUTH AFRICA</option>
+<option value="ZADUR - DURBAN - SOUTH AFRICA">ZADUR - DURBAN - SOUTH AFRICA</option>
+<option value="ZAELS - EAST LONDON - SOUTH AFRICA">ZAELS - EAST LONDON - SOUTH AFRICA</option>
+<option value="ZAJNB - JOHANNESBURG - SOUTH AFRICA">ZAJNB - JOHANNESBURG - SOUTH AFRICA</option>
+<option value="ZAPLZ - PORT ELISABETH - SOUTH AFRICA">ZAPLZ - PORT ELISABETH - SOUTH AFRICA</option>
+<option value="ZARCB - RICHARDS BAY - SOUTH AFRICA">ZARCB - RICHARDS BAY - SOUTH AFRICA</option>
+<option value="ZAZBA - COEGA - SOUTH AFRICA">ZAZBA - COEGA - SOUTH AFRICA</option>
+<option value="ZMB2U - BISSAU - ZAMBIA">ZMB2U - BISSAU - ZAMBIA</option>
+<option value="ZMLUN - LUSAKA - ZAMBIA">ZMLUN - LUSAKA - ZAMBIA</option>
+<option value="AUADL - ADELAIDE - AUSTRALIA">AUADL - ADELAIDE - AUSTRALIA</option>
+<option value="AUBEL - BELL BAY - AUSTRALIA">AUBEL - BELL BAY - AUSTRALIA</option>
+<option value="AUBNE - BRISBANE - AUSTRALIA">AUBNE - BRISBANE - AUSTRALIA</option>
+<option value="AUBNK - BALLINA - AUSTRALIA">AUBNK - BALLINA - AUSTRALIA</option>
+<option value="AUBWT - BURNIE - AUSTRALIA">AUBWT - BURNIE - AUSTRALIA</option>
+<option value="AUDPO - DEVONPORT - AUSTRALIA">AUDPO - DEVONPORT - AUSTRALIA</option>
+<option value="AUDRW - DARWIN - AUSTRALIA">AUDRW - DARWIN - AUSTRALIA</option>
+<option value="AUEPR - #N/A - AUSTRALIA">AUEPR - #N/A - AUSTRALIA</option>
+<option value="AUFRE - FREMANTLE - AUSTRALIA">AUFRE - FREMANTLE - AUSTRALIA</option>
+<option value="AUHBA - HOBART - AUSTRALIA">AUHBA - HOBART - AUSTRALIA</option>
+<option value="AUKIT - KINGSTON - AUSTRALIA">AUKIT - KINGSTON - AUSTRALIA</option>
+<option value="AULIV - LIVERPOOL - AUSTRALIA">AULIV - LIVERPOOL - AUSTRALIA</option>
+<option value="AULST - LAUNCESTON - AUSTRALIA">AULST - LAUNCESTON - AUSTRALIA</option>
+<option value="AUMEL - MELBOURNE - AUSTRALIA">AUMEL - MELBOURNE - AUSTRALIA</option>
+<option value="AUNTL - NEWCASTLE - AUSTRALIA">AUNTL - NEWCASTLE - AUSTRALIA</option>
+<option value="AUPKL - PORT KEMBLA - AUSTRALIA">AUPKL - PORT KEMBLA - AUSTRALIA</option>
+<option value="AUQEL - WELLINGTON - AUSTRALIA">AUQEL - WELLINGTON - AUSTRALIA</option>
+<option value="AUSYD - SYDNEY - AUSTRALIA">AUSYD - SYDNEY - AUSTRALIA</option>
+<option value="AUTSV - TOWNSVILLE - AUSTRALIA">AUTSV - TOWNSVILLE - AUSTRALIA</option>
+<option value="WSAPW - ΑΡΙΑ - SAMOA">WSAPW - ΑΡΙΑ - SAMOA</option>
+<option value="BDCGP - CHITTAGONG - BANGLADESH">BDCGP - CHITTAGONG - BANGLADESH</option>
+<option value="BDDAC - DHAKA - BANGLADESH">BDDAC - DHAKA - BANGLADESH</option>
+<option value="BDKAM - KAMALAPUR/DHAKA - BANGLADESH">BDKAM - KAMALAPUR/DHAKA - BANGLADESH</option>
+<option value="BDMGL - MONGLA - BANGLADESH">BDMGL - MONGLA - BANGLADESH</option>
+<option value="BNMUA - MUARA - BRUNEI DARUSSALAM">BNMUA - MUARA - BRUNEI DARUSSALAM</option>
+<option value="CN1AD - CHANGDE, 43 - SHANGHAI">CN1AD - CHANGDE, 43 - SHANGHAI</option>
+<option value="CN6YC - YICHANG - SHANGHAI">CN6YC - YICHANG - SHANGHAI</option>
+<option value="CNAQG - ANQING - SHANGHAI">CNAQG - ANQING - SHANGHAI</option>
+<option value="CNBAY - BAYUQUAN - DALIAN">CNBAY - BAYUQUAN - DALIAN</option>
+<option value="CNBEI - BEILUN. 33 - NINGBO">CNBEI - BEILUN. 33 - NINGBO</option>
+<option value="CNBHY - BEIHAI - CHINA">CNBHY - BEIHAI - CHINA</option>
+<option value="CNBJO - BEIJIAO - SHENZHEN+PRD">CNBJO - BEIJIAO - SHENZHEN+PRD</option>
+<option value="CNCAN - GUANGZHOU - CHINA">CNCAN - GUANGZHOU - CHINA</option>
+<option value="CNCDE - CHANGDE - SHANGHAI">CNCDE - CHANGDE - SHANGHAI</option>
+<option value="CNCGO - ZHENGZHOU - QINGDAO">CNCGO - ZHENGZHOU - QINGDAO</option>
+<option value="CNCGU - CHANGSHU - SHANGHAI">CNCGU - CHANGSHU - SHANGHAI</option>
+<option value="CNCKG - CHONGQING - SHANGHAI">CNCKG - CHONGQING - SHANGHAI</option>
+<option value="CNCLJ - CHENGLINGJI, 43 - SHANGHAI">CNCLJ - CHENGLINGJI, 43 - SHANGHAI</option>
+<option value="CNCSX - CHANGSHA - SHANGHAI">CNCSX - CHANGSHA - SHANGHAI</option>
+<option value="CNCTU - CHENGDU - SHANGHAI">CNCTU - CHENGDU - SHANGHAI</option>
+<option value="CNCWN - CHIWAN - SHENZHEN+PRD">CNCWN - CHIWAN - SHENZHEN+PRD</option>
+<option value="CNCZX - CHANGZHOU - SHANGHAI">CNCZX - CHANGZHOU - SHANGHAI</option>
+<option value="CNDGG - DONGGUAN - SHENZHEN+PRD">CNDGG - DONGGUAN - SHENZHEN+PRD</option>
+<option value="CNDLC - DALIAN - DALIAN">CNDLC - DALIAN - DALIAN</option>
+<option value="CNDOU - DOUMEN, 44 - SHENZHEN+PRD">CNDOU - DOUMEN, 44 - SHENZHEN+PRD</option>
+<option value="CNFAN - FANGCHENG - CHINA">CNFAN - FANGCHENG - CHINA</option>
+<option value="CNFNG - FUYONG. 44 - SHENZHEN+PRD">CNFNG - FUYONG. 44 - SHENZHEN+PRD</option>
+<option value="CNFOC - FUZHOU - CHINA">CNFOC - FUZHOU - CHINA</option>
+<option value="CNFOS - FOSHAN - SHENZHEN+PRD">CNFOS - FOSHAN - SHENZHEN+PRD</option>
+<option value="CNFUG - FUQING - FUZHOU">CNFUG - FUQING - FUZHOU</option>
+<option value="CNGAS - GAOSHA - SHENZHEN+PRD">CNGAS - GAOSHA - SHENZHEN+PRD</option>
+<option value="CNGAY - GAOYAO - SHANGHAI">CNGAY - GAOYAO - SHANGHAI</option>
+<option value="CNGOM - GAOMING - SHENZHEN+PRD">CNGOM - GAOMING - SHENZHEN+PRD</option>
+<option value="CNGUG - GUIGANG - SHENZHEN+PRD">CNGUG - GUIGANG - SHENZHEN+PRD</option>
+<option value="CNH11 - SHA SHI &quot;NOT VALID - SHANGHAI">CNH11 - SHA SHI &quot;NOT VALID - SHANGHAI</option>
+<option value="CNHAK - HAIKOU - CHINA">CNHAK - HAIKOU - CHINA</option>
+<option value="CNHDU - HUADU &quot;NOT VALID - SHENZHEN+PRD">CNHDU - HUADU &quot;NOT VALID - SHENZHEN+PRD</option>
+<option value="CNHGH - HANGZHOU - SHANGHAI">CNHGH - HANGZHOU - SHANGHAI</option>
+<option value="CNHME - HAIMEN - NINGBO">CNHME - HAIMEN - NINGBO</option>
+<option value="CNHRB - HARBIN - DALIAN">CNHRB - HARBIN - DALIAN</option>
+<option value="CNHSI - HUANGSHI - SHANGHAI">CNHSI - HUANGSHI - SHANGHAI</option>
+<option value="CNHSN - HESHAN - SHENZHEN+PRD">CNHSN - HESHAN - SHENZHEN+PRD</option>
+<option value="CNHUA - HUANGPU - CHINA">CNHUA - HUANGPU - CHINA</option>
+<option value="CNHUD - HUA DU - SHENZHEN+PRD">CNHUD - HUA DU - SHENZHEN+PRD</option>
+<option value="CNHUI - HUIZHOU - SHENZHEN+PRD">CNHUI - HUIZHOU - SHENZHEN+PRD</option>
+<option value="CNHZH - HUZHOU - SHANGHAI">CNHZH - HUZHOU - SHANGHAI</option>
+<option value="CNJIA - JIANGYIN - SHANGHAI">CNJIA - JIANGYIN - SHANGHAI</option>
+<option value="CNJIN - JINAN - QINGDAO">CNJIN - JINAN - QINGDAO</option>
+<option value="CNJIU - JIUJIANG - SHANGHAI">CNJIU - JIUJIANG - SHANGHAI</option>
+<option value="CNJJG - JIUJIANG, 44 - SHENZHEN+PRD">CNJJG - JIUJIANG, 44 - SHENZHEN+PRD</option>
+<option value="CNJMN - JIANGMEN - SHENZHEN+PRD">CNJMN - JIANGMEN - SHENZHEN+PRD</option>
+<option value="CNJNZ - JINZHOU - SHANGHAI">CNJNZ - JINZHOU - SHANGHAI</option>
+<option value="CNJXN - JIAO XIN - SHENZHEN+PRD">CNJXN - JIAO XIN - SHENZHEN+PRD</option>
+<option value="CNKHN - NANCHANG - CHINA">CNKHN - NANCHANG - CHINA</option>
+<option value="CNL21 - LANSHI - SHENZHEN+PRD">CNL21 - LANSHI - SHENZHEN+PRD</option>
+<option value="CNLAN - LANSHI, 44 - SHENZHEN+PRD">CNLAN - LANSHI, 44 - SHENZHEN+PRD</option>
+<option value="CNLIH - LIANHUASHAN - SHENZHEN+PRD">CNLIH - LIANHUASHAN - SHENZHEN+PRD</option>
+<option value="CNLKU - LONGKOU - DALIAN">CNLKU - LONGKOU - DALIAN</option>
+<option value="CNLSI - LANSHI - SHENZHEN+PRD">CNLSI - LANSHI - SHENZHEN+PRD</option>
+<option value="CNLUD - LIUDU. 44 - SHENZHEN+PRD">CNLUD - LIUDU. 44 - SHENZHEN+PRD</option>
+<option value="CNLUU - LELIU - SHENZHEN+PRD">CNLUU - LELIU - SHENZHEN+PRD</option>
+<option value="CNLYG - LIANYUNGANG - QINGDAO">CNLYG - LIANYUNGANG - QINGDAO</option>
+<option value="CNLZH - LIUZHOU - SHENZHEN+PRD">CNLZH - LIUZHOU - SHENZHEN+PRD</option>
+<option value="CNMAA - MAANSHAN - SHANGHAI">CNMAA - MAANSHAN - SHANGHAI</option>
+<option value="CNMFG - MAFANG - SHENZHEN+PRD">CNMFG - MAFANG - SHENZHEN+PRD</option>
+<option value="CNMMI - MAOMING - CHINA">CNMMI - MAOMING - CHINA</option>
+<option value="CNMWN - MAWAN - SHENZHEN+PRD">CNMWN - MAWAN - SHENZHEN+PRD</option>
+<option value="CNMYG - MIANYANG - SHANGHAI">CNMYG - MIANYANG - SHANGHAI</option>
+<option value="CNNAH - NANHAI - SHENZHEN+PRD">CNNAH - NANHAI - SHENZHEN+PRD</option>
+<option value="CNNGB - NINGBO - CHINA">CNNGB - NINGBO - CHINA</option>
+<option value="CNNGG - NANGANG - SHENZHEN+PRD">CNNGG - NANGANG - SHENZHEN+PRD</option>
+<option value="CNNKG - NANJING - SHANGHAI">CNNKG - NANJING - SHANGHAI</option>
+<option value="CNNNG - NANNING - SHENZHEN+PRD">CNNNG - NANNING - SHENZHEN+PRD</option>
+<option value="CNNSA - NANSHA - CHINA">CNNSA - NANSHA - CHINA</option>
+<option value="CNNTG - NANTONG - SHANGHAI">CNNTG - NANTONG - SHANGHAI</option>
+<option value="CNQYN - QINGYUAN - SHENZHEN+PRD">CNQYN - QINGYUAN - SHENZHEN+PRD</option>
+<option value="CNQZH - QINZHOU - SHENZHEN+PRD">CNQZH - QINZHOU - SHENZHEN+PRD</option>
+<option value="CNQZJ - QUANZHOU - SHENZHEN+PRD">CNQZJ - QUANZHOU - SHENZHEN+PRD</option>
+<option value="CNROQ - RONGQI - CHINA">CNROQ - RONGQI - CHINA</option>
+<option value="CNSBU - SANBU - SHENZHEN+PRD">CNSBU - SANBU - SHENZHEN+PRD</option>
+<option value="CNSDG - SHUIDONG - SHENZHEN+PRD">CNSDG - SHUIDONG - SHENZHEN+PRD</option>
+<option value="CNSHA - SHANGHAI - CHINA">CNSHA - SHANGHAI - CHINA</option>
+<option value="CNSHD - SHIDAO - QINGDAO">CNSHD - SHIDAO - QINGDAO</option>
+<option value="CNSHG - SANSHAN - CHINA">CNSHG - SANSHAN - CHINA</option>
+<option value="CNSHK - SHEKOU - CHINA">CNSHK - SHEKOU - CHINA</option>
+<option value="CNSHP - QIANHUANGDAO - DALIAN">CNSHP - QIANHUANGDAO - DALIAN</option>
+<option value="CNSHS - SHASHI - SHANGHAI">CNSHS - SHASHI - SHANGHAI</option>
+<option value="CNSHW - HONGHAI - SHENZHEN+PRD">CNSHW - HONGHAI - SHENZHEN+PRD</option>
+<option value="CNSIA - XIAN - QINGDAO">CNSIA - XIAN - QINGDAO</option>
+<option value="CNSIN - SHATIAN - CHINA">CNSIN - SHATIAN - CHINA</option>
+<option value="CNSJQ - SANSHUI - SHENZHEN+PRD">CNSJQ - SANSHUI - SHENZHEN+PRD</option>
+<option value="CNSSH - SANSHAN - SHENZHEN+PRD">CNSSH - SANSHAN - SHENZHEN+PRD</option>
+<option value="CNSUD - SHUNDE - SHENZHEN+PRD">CNSUD - SHUNDE - SHENZHEN+PRD</option>
+<option value="CNSWA - SHANTOU - SHENZHEN+PRD">CNSWA - SHANTOU - SHENZHEN+PRD</option>
+<option value="CNSZH - SUZHOU - SHANGHAI">CNSZH - SUZHOU - SHANGHAI</option>
+<option value="CNSZX - SHENZHEN - SHENZHEN+PRD">CNSZX - SHENZHEN - SHENZHEN+PRD</option>
+<option value="CNTAG - TAICANG - SHANGHAI">CNTAG - TAICANG - SHANGHAI</option>
+<option value="CNTAO - QINGDAO - QINGDAO">CNTAO - QINGDAO - QINGDAO</option>
+<option value="CNTAP - TAIPING - #N/A">CNTAP - TAIPING - #N/A</option>
+<option value="CNTHG - TAISHAN, 44 - SHENZHEN+PRD">CNTHG - TAISHAN, 44 - SHENZHEN+PRD</option>
+<option value="CNTOL - TONGLING - SHANGHAI">CNTOL - TONGLING - SHANGHAI</option>
+<option value="CNTSN - TIANJIN - TIANJIN">CNTSN - TIANJIN - TIANJIN</option>
+<option value="CNTXG - XINGANG - TIANJIN">CNTXG - XINGANG - TIANJIN</option>
+<option value="CNTZO - TAIZHOU, JIANGSU - SHANGHAI">CNTZO - TAIZHOU, JIANGSU - SHANGHAI</option>
+<option value="CNWEI - WEIHAI - QINGDAO">CNWEI - WEIHAI - QINGDAO</option>
+<option value="CNWHI - WUHU - SHANGHAI">CNWHI - WUHU - SHANGHAI</option>
+<option value="CNWNZ - WENZHOU - NINGBO">CNWNZ - WENZHOU - NINGBO</option>
+<option value="CNWTU - WEITOU, 35 - XIAMEN">CNWTU - WEITOU, 35 - XIAMEN</option>
+<option value="CNWUH - WUHAN - SHANGHAI">CNWUH - WUHAN - SHANGHAI</option>
+<option value="CNWUX - WUXI - SHANGHAI">CNWUX - WUXI - SHANGHAI</option>
+<option value="CNWUZ - WUZHOU - #N/A">CNWUZ - WUZHOU - #N/A</option>
+<option value="CNXAB - XINFENG - SHENZHEN+PRD">CNXAB - XINFENG - SHENZHEN+PRD</option>
+<option value="CNXGG - XINGANG - SHENZHEN+PRD">CNXGG - XINGANG - SHENZHEN+PRD</option>
+<option value="CNXIL - XIAOLAN, 44 - SHENZHEN+PRD">CNXIL - XIAOLAN, 44 - SHENZHEN+PRD</option>
+<option value="CNXIN - XINHUI - SHENZHEN+PRD">CNXIN - XINHUI - SHENZHEN+PRD</option>
+<option value="CNXIT - XINTANG - SHENZHEN+PRD">CNXIT - XINTANG - SHENZHEN+PRD</option>
+<option value="CNXMN - XIAMEN - CHINA">CNXMN - XIAMEN - CHINA</option>
+<option value="CNXTA - XIANGTAN, 43 - SHANGHAI">CNXTA - XIANGTAN, 43 - SHANGHAI</option>
+<option value="CNYGG - YANGJIANG - SHENZHEN+PRD">CNYGG - YANGJIANG - SHENZHEN+PRD</option>
+<option value="CNYIC - YICHANG - SHANGHAI">CNYIC - YICHANG - SHANGHAI</option>
+<option value="CNYIK - YINGKOU - DALIAN">CNYIK - YINGKOU - DALIAN</option>
+<option value="CNYNF - YUNFU - SHENZHEN+PRD">CNYNF - YUNfu - SHENZHEN+PRD</option>
+<option value="CNYNT - YANTAI - DALIAN">CNYNT - YANTAI - DALIAN</option>
+<option value="CNYQS - BEIJIAO - SHENZHEN+PRD">CNYQS - BEIJIAO - SHENZHEN+PRD</option>
+<option value="CNYTN - YANTIAN - SHENZHEN+PRD">CNYTN - YANTIAN - SHENZHEN+PRD</option>
+<option value="CNYUN - YUNCHENG - QINGDAO">CNYUN - YUNCHENG - QINGDAO</option>
+<option value="CNYUY - YUEYANG, 43 - SHANGHAI">CNYUY - YUEYANG, 43 - SHANGHAI</option>
+<option value="CNYZH - YANGZHOU - SHANGHAI">CNYZH - YANGZHOU - SHANGHAI</option>
+<option value="CNZHA - ZHANJIANG - SHENZHEN+PRD">CNZHA - ZHANJIANG - SHENZHEN+PRD</option>
+<option value="CNZHE - ZHENJIANG - SHANGHAI">CNZHE - ZHENJIANG - SHANGHAI</option>
+<option value="CNZJG - ZHANGJIAGANG - SHANGHAI">CNZJG - ZHANGJIAGANG - SHANGHAI</option>
+<option value="CNZQG - ZHAOQING - SHENZHEN+PRD">CNZQG - ZHAOQING - SHENZHEN+PRD</option>
+<option value="CNZSN - ZHONGSHAN - CHINA">CNZSN - ZHONGSHAN - CHINA</option>
+<option value="CNZUH - ZHUHAI - SHENZHEN+PRD">CNZUH - ZHUHAI - SHENZHEN+PRD</option>
+<option value="CNZUU - ZHUZHOU - SHANGHAI">CNZUU - ZHUZHOU - SHANGHAI</option>
+<option value="CNZZU - ZHANGZHOU - XIAMEN">CNZZU - ZHANGZHOU - XIAMEN</option>
+<option value="GUGUM - GUAM - GUAM">GUGUM - GUAM - GUAM</option>
+<option value="HKHKG - HONG KONG - HONG KONG SAR, CHINA">HKHKG - HONG KONG - HONG KONG SAR, CHINA</option>
+<option value="IDBDJ - BANJARMASIN - INDONESIA">IDBDJ - BANJARMASIN - INDONESIA</option>
+<option value="IDBIT - BITUNG - INDONESIA">IDBIT - BITUNG - INDONESIA</option>
+<option value="IDBLW - BELAWAN - INDONESIA">IDBLW - BELAWAN - INDONESIA</option>
+<option value="IDBOA - BENOA - INDONESIA">IDBOA - BENOA - INDONESIA</option>
+<option value="IDBPN - BALIKPAPAN - INDONESIA">IDBPN - BALIKPAPAN - INDONESIA</option>
+<option value="IDBTM - BATAM - INDONESIA">IDBTM - BATAM - INDONESIA</option>
+<option value="IDBUN - BUATAN - INDONESIA">IDBUN - BUATAN - INDONESIA</option>
+<option value="IDDJB - JAMBI - INDONESIA">IDDJB - JAMBI - INDONESIA</option>
+<option value="IDJKT - JAKARTA - INDONESIA">IDJKT - JAKARTA - INDONESIA</option>
+<option value="IDMAK - MAKASSAR - INDONESIA">IDMAK - MAKASSAR - INDONESIA</option>
+<option value="IDPDG - PADANG - INDONESIA">IDPDG - PADANG - INDONESIA</option>
+<option value="IDPER - PERAWANG - #N/A">IDPER - PERAWANG - #N/A</option>
+<option value="IDPGX - PANGKAL BALAM, BANKA - INDONESIA">IDPGX - PANGKAL BALAM, BANKA - INDONESIA</option>
+<option value="IDPKU - PEKANBARU, SUMATRA - INDONESIA">IDPKU - PEKANBARU, SUMATRA - INDONESIA</option>
+<option value="IDPLM - PALEMBANG - #N/A">IDPLM - PALEMBANG - #N/A</option>
+<option value="IDPNJ - PANJANG - INDONESIA">IDPNJ - PANJANG - INDONESIA</option>
+<option value="IDPNK - PONTIANAK - INDONESIA">IDPNK - PONTIANAK - INDONESIA</option>
+<option value="IDSRG - SEMARANG - INDONESIA">IDSRG - SEMARANG - INDONESIA</option>
+<option value="IDSRI - SAMARINDA - INDONESIA">IDSRI - SAMARINDA - INDONESIA</option>
+<option value="IDSUB - SURABAYA - INDONESIA">IDSUB - SURABAYA - INDONESIA</option>
+<option value="IDTRG - TANGERANG - INDONESIA">IDTRG - TANGERANG - INDONESIA</option>
+<option value="IDUPG - UJUG PANDANG - INDONESIA">IDUPG - UJUG PANDANG - INDONESIA</option>
+<option value="JPABU - ABURATSU, 45 - JAPAN">JPABU - ABURATSU, 45 - JAPAN</option>
+<option value="JPAXT - AKITA - JAPAN">JPAXT - AKITA - JAPAN</option>
+<option value="JPCHB - CHIBA - JAPAN">JPCHB - CHIBA - JAPAN</option>
+<option value="JPFKY - FUKUYAMA - JAPAN">JPFKY - FUKUYAMA - JAPAN</option>
+<option value="JPHHE - HACHINOHE - JAPAN">JPHHE - HACHINOHE - JAPAN</option>
+<option value="JPHIC - HITACHINAKA - JAPAN">JPHIC - HITACHINAKA - JAPAN</option>
+<option value="JPHIJ - HIROSHIMA - JAPAN">JPHIJ - HIROSHIMA - JAPAN</option>
+<option value="JPHKT - HAKATA/FUKUOKA - JAPAN">JPHKT - HAKATA/FUKUOKA - JAPAN</option>
+<option value="JPHSM - HOSOSHIMA - JAPAN">JPHSM - HOSOSHIMA - JAPAN</option>
+<option value="JPHTD - HAKATA - JAPAN">JPHTD - HAKATA - JAPAN</option>
+<option value="JPIMI - IMARI - JAPAN">JPIMI - IMARI - JAPAN</option>
+<option value="JPISG - ISHIGAKIJIMA - JAPAN">JPISG - ISHIGAKIJIMA - JAPAN</option>
+<option value="JPISI - ISHIKARI - JAPAN">JPISI - ISHIKARI - JAPAN</option>
+<option value="JPIWK - IWAKUNI - JAPAN">JPIWK - IWAKUNI - JAPAN</option>
+<option value="JPIYM - IYOMISHIMA - JAPAN">JPIYM - IYOMISHIMA - JAPAN</option>
+<option value="JPKCZ - KOCHI - JAPAN">JPKCZ - KOCHI - JAPAN</option>
+<option value="JPKIJ - NIIGATA - JAPAN">JPKIJ - NIIGATA - JAPAN</option>
+<option value="JPKNZ - KANAZAWA - JAPAN">JPKNZ - KANAZAWA - JAPAN</option>
+<option value="JPKOJ - KAGOSHIMA - JAPAN">JPKOJ - KAGOSHIMA - JAPAN</option>
+<option value="JPKUH - KUSHIRO - JAPAN">JPKUH - KUSHIRO - JAPAN</option>
+<option value="JPKWS - KAWASAKI - JAPAN">JPKWS - KAWASAKI - JAPAN</option>
+<option value="JPMA1 - MINADO, 17 - JAPAN">JPMA1 - MINADO, 17 - JAPAN</option>
+<option value="JPMAI - MAIZURU - JAPAN">JPMAI - MAIZURU - JAPAN</option>
+<option value="JPMIZ - MIZUSHIMA - JAPAN">JPMIZ - MIZUSHIMA - JAPAN</option>
+<option value="JPMOJ - MOJI/KITAKYUSHU - JAPAN">JPMOJ - MOJI/KITAKYUSHU - JAPAN</option>
+<option value="JPMUR - MURORAN - JAPAN">JPMUR - MURORAN - JAPAN</option>
+<option value="JPMYJ - MATSUYAMA - JAPAN">JPMYJ - MATSUYAMA - JAPAN</option>
+<option value="JPNAH - NAHA - JAPAN">JPNAH - NAHA - JAPAN</option>
+<option value="JPNAN - NAKANOSEKI - JAPAN">JPNAN - NAKANOSEKI - JAPAN</option>
+<option value="JPNAO - NAOETSU - JAPAN">JPNAO - NAOETSU - JAPAN</option>
+<option value="JPNGO - NAGOYA - JAPAN">JPNGO - NAGOYA - JAPAN</option>
+<option value="JPNGS - NAGASAKI - JAPAN">JPNGS - NAGASAKI - JAPAN</option>
+<option value="JPOIT - ΟΙΤΑ - JAPAN">JPOIT - ΟΙΤΑ - JAPAN</option>
+<option value="JPOMZ - OMAEZAKI, 22 - JAPAN">JPOMZ - OMAEZAKI, 22 - JAPAN</option>
+<option value="JPONA - ONAHAMA - JAPAN">JPONA - ONAHAMA - JAPAN</option>
+<option value="JPOSA - OSAKA - JAPAN">JPOSA - OSAKA - JAPAN</option>
+<option value="JPSA4 - SAKO, 39 - JAPAN">JPSA4 - SAKO, 39 - JAPAN</option>
+<option value="JPSBS - SHIBUSHI - JAPAN">JPSBS - SHIBUSHI - JAPAN</option>
+<option value="JPSDJ - SENDAI - JAPAN">JPSDJ - SENDAI - JAPAN</option>
+<option value="JPSEN - SENDAI, KAGOSHIMA, 46 - JAPAN">JPSEN - SENDAI, KAGOSHIMA, 46 - JAPAN</option>
+<option value="JPSKT - SAKATA - JAPAN">JPSKT - SAKATA - JAPAN</option>
+<option value="JPSMZ - SHIMIZU - JAPAN">JPSMZ - SHIMIZU - JAPAN</option>
+<option value="JPTAK - TAKAMATSU - JAPAN">JPTAK - TAKAMATSU - JAPAN</option>
+<option value="JPTBT - TOBATA/KITAKYUSHU, 40 - JAPAN">JPTBT - TOBATA/KITAKYUSHU, 40 - JAPAN</option>
+<option value="JPTHS - TOYOHASHI - JAPAN">JPTHS - TOYOHASHI - JAPAN</option>
+<option value="JPTKS - TOKUSHIMA - JAPAN">JPTKS - TOKUSHIMA - JAPAN</option>
+<option value="JPTKY - TOKUYAMA - JAPAN">JPTKY - TOKUYAMA - JAPAN</option>
+<option value="JPTMK - ΤΟΜΑΚΟΜΑΙ - JAPAN">JPTMK - ΤΟΜΑΚΟΜΑΙ - JAPAN</option>
+<option value="JPTOK - TOKACHI, 01 - JAPAN">JPTOK - TOKACHI, 01 - JAPAN</option>
+<option value="JPTOS - TOYAMA-SHINKO, 16 - JAPAN">JPTOS - TOYAMA-SHINKO, 16 - JAPAN</option>
+<option value="JPTOY - TOYAMA - JAPAN">JPTOY - TOYAMA - JAPAN</option>
+<option value="JPTYO - TOKYO - JAPAN">JPTYO - TOKYO - JAPAN</option>
+<option value="JPUKB - KOBE - JAPAN">JPUKB - KOBE - JAPAN</option>
+<option value="JPYAT - YATSUSHIRO - JAPAN">JPYAT - YATSUSHIRO - JAPAN</option>
+<option value="JPYKK - YOKKAICHI - JAPAN">JPYKK - YOKKAICHI - JAPAN</option>
+<option value="JPYOK - YOKOHAMA - JAPAN">JPYOK - YOKOHAMA - JAPAN</option>
+<option value="KHKOS - SIHANOUKVILLE - CAMBODIA">KHKOS - SIHANOUKVILLE - CAMBODIA</option>
+<option value="ΚΗΡΝΗ - ΡΗΝΟΜ ΡΕΝΗ - CAMBODIA">ΚΗΡΝΗ - ΡΗΝΟΜ ΡΕΝΗ - CAMBODIA</option>
+<option value="MMRGN - YANGON - MYANMAR">MMRGN - YANGON - MYANMAR</option>
+<option value="MNULN - ULAANBAATAR - MONGOLIA">MNULN - ULAANBAATAR - MONGOLIA</option>
+<option value="MOFMM - MACAU - HONG KONG">MOFMM - MACAU - HONG KONG</option>
+<option value="MOMFM - MACAU - MACAU">MOMFM - MACAU - MACAU</option>
+<option value="MYBKI - KOTA KINABALU - MALAYSIA">MYBKI - KOTA KINABALU - MALAYSIA</option>
+<option value="MYBTU - BINTULU - MALAYSIA">MYBTU - BINTULU - MALAYSIA</option>
+<option value="MYKCH - KUCHING - MALAYSIA">MYKCH - KUCHING - MALAYSIA</option>
+<option value="MYKEL - KELANG - MALAYSIA">MYKEL - KELANG - MALAYSIA</option>
+<option value="MYKUA - KUALA LUMPUR - MALAYSIA">MYKUA - KUALA LUMPUR - MALAYSIA</option>
+<option value="MYLBU - LABUAN - MALAYSIA">MYLBU - LABUAN - MALAYSIA</option>
+<option value="MYMYY - MIRI - MALAYSIA">MYMYY - MIRI - MALAYSIA</option>
+<option value="MYPEN - PENANG - MALAYSIA">MYPEN - PENANG - MALAYSIA</option>
+<option value="MYPGU - PASIR GUDANG - MALAYSIA">MYPGU - PASIR GUDANG - MALAYSIA</option>
+<option value="MYPKG - PORT KELANG - MALAYSIA">MYPKG - PORT KELANG - MALAYSIA</option>
+<option value="MYSBW - SIBU - MALAYSIA">MYSBW - SIBU - MALAYSIA</option>
+<option value="MYSDK - SANDAKAN - MALAYSIA">MYSDK - SANDAKAN - MALAYSIA</option>
+<option value="MYT2U - TAWAU &quot;NOT VALID - MALAYSIA">MYT2U - TAWAU &quot;NOT VALID - MALAYSIA</option>
+<option value="MYTPP - TANJONG PELEPAS - MALAYSIA">MYTPP - TANJONG PELEPAS - MALAYSIA</option>
+<option value="MYTWU - TAWAU - MALAYSIA">MYTWU - TAWAU - MALAYSIA</option>
+<option value="PHBIY - BIYAWA - PHILIPPINES">PHBIY - BIYAWA - PHILIPPINES</option>
+<option value="PHBTG - #N/A - PHILIPPINES">PHBTG - #N/A - PHILIPPINES</option>
+<option value="PHCEB - CEBU - PHILIPPINES">PHCEB - CEBU - PHILIPPINES</option>
+<option value="PHCGY - CAGAYAN DEORO - PHILIPPINES">PHCGY - CAGAYAN DEORO - PHILIPPINES</option>
+<option value="PHDVO - DAVAO - PHILIPPINES">PHDVO - DAVAO - PHILIPPINES</option>
+<option value="PHGES - GENERAL SANTOS - PHILIPPINES">PHGES - GENERAL SANTOS - PHILIPPINES</option>
+<option value="PHMNL - MANILA - PHILIPPINES">PHMNL - MANILA - PHILIPPINES</option>
+<option value="PHMNN - MANILA NORTH HARBOUR - PHILIPPINES">PHMNN - MANILA NORTH HARBOUR - PHILIPPINES</option>
+<option value="PHMNS - MANILA SOUTH HARBOUR - PHILIPPINES">PHMNS - MANILA SOUTH HARBOUR - PHILIPPINES</option>
+<option value="PHSFS - SUBIC BAY - PHILIPPINES">PHSFS - SUBIC BAY - PHILIPPINES</option>
+<option value="PWROR - KOROR - PALAU">PWROR - KOROR - PALAU</option>
+<option value="SGSIN - SINGAPORE - SINGAPORE">SGSIN - SINGAPORE - SINGAPORE</option>
+<option value="THB21 - BMT PORT BANGKOK &quot;NOT VALID - THAILAND">THB21 - BMT PORT BANGKOK &quot;NOT VALID - THAILAND</option>
+<option value="THBGP - BANGPAKONG - THAILAND">THBGP - BANGPAKONG - THAILAND</option>
+<option value="THBKK - BANGKOK - THAILAND">THBKK - BANGKOK - THAILAND</option>
+<option value="THKTY - KLONG TOEY - THAILAND">THKTY - KLONG TOEY - THAILAND</option>
+<option value="THLCH - LAEM CHABANG - THAILAND">THLCH - LAEM CHABANG - THAILAND</option>
+<option value="THLKR - LATKRABANG - THAILAND">THLKR - LATKRABANG - THAILAND</option>
+<option value="THSGZ - SONGKHLA PORT - THAILAND">THSGZ - SONGKHLA PORT - THAILAND</option>
+<option value="TWKEL - KEELUNG - TAIWAN, CHINA">TWKEL - KEELUNG - TAIWAN, CHINA</option>
+<option value="TWKHH - KAOHSIUNG - TAIWAN, CHINA">TWKHH - KAOHSIUNG - TAIWAN, CHINA</option>
+<option value="TWT2A - TAIPING - TAIWAN">TWT2A - TAIPING - TAIWAN</option>
+<option value="TWTPE - #N/A - #N/A">TWTPE - #N/A - #N/A</option>
+<option value="TWTXG - TAICHUNG - TAIWAN, CHINA">TWTXG - TAICHUNG - TAIWAN, CHINA</option>
+<option value="TWTYN - TAOYUAN - TAIWAN">TWTYN - TAOYUAN - TAIWAN</option>
+<option value="VNC8Q - #N/A - VIET NAM">VNC8Q - #N/A - VIET NAM</option>
+<option value="VNCLI - CAT LAI - VIET NAM">VNCLI - CAT LAI - VIET NAM</option>
+<option value="VNCLN - CAI LAN - VIET NAM">VNCLN - CAI LAN - VIET NAM</option>
+<option value="VNDAD - DA NANG - VIET NAM">VNDAD - DA NANG - VIET NAM</option>
+<option value="VNHAN - HANOI - VIET NAM">VNHAN - HANOI - VIET NAM</option>
+<option value="VNHPH - HAIPHONG - VIET NAM">VNHPH - HAIPHONG - VIET NAM</option>
+<option value="VNNGH - #N/A - VIET NAM">VNNGH - #N/A - VIET NAM</option>
+<option value="VNNHA - NHA TRANG - VIET NAM">VNNHA - NHA TRANG - VIET NAM</option>
+<option value="VNPHG - PHUOC LONG - VIET NAM">VNPHG - PHUOC LONG - VIET NAM</option>
+<option value="VNSGN - HO CHI MINH CITY - VIET NAM">VNSGN - HO CHI MINH CITY - VIET NAM</option>
+<option value="VNTCG - TAN CANG/NEWPORT - VIET NAM">VNTCG - TAN CANG/NEWPORT - VIET NAM</option>
+<option value="VNU20 - CUA LO - VIET NAM">VNU20 - CUA LO - VIET NAM</option>
+<option value="VNUIH - QUI NHƠN - VIET NAM">VNUIH - QUI NHƠN - VIET NAM</option>
+<option value="VNVIC - HO CHI MINH, VICT - VIET NAM">VNVIC - HO CHI MINH, VICT - VIET NAM</option>
+<option value="VNVUT - #N/A - VIET NAM">VNVUT - #N/A - VIET NAM</option>
+</select>
+</div>
+</div>
+<!-- القسم الثالث -->
+<div class="section">
+<div class="section-title">Route Information</div>
+<div class="row">
+<div>
+<label>From:</label>
+<select id="from-port" style="width: 100%;">
+<option disabled="" selected="">Select From Port</option>
+<option>ALEXANDRIA</option><option>CAIRO</option><option>DAMIETTA</option><option>MANSOURA</option><option>PORT SAID</option><option>SUEZ</option><option>MENYA</option><option value="Other">Other</option></select>
+<input id="from-port-other" placeholder="Enter port manually" style="display:none; margin-top:10px;" type="text"/>
+</div>
+<div>
+<label>To:</label>
+<select id="to-port" style="width: 100%;">
+<option disabled="" selected="">Select To Port</option>
+<option>ALEXANDRIA</option><option>CAIRO</option><option>DAMIETTA</option><option>MANSOURA</option><option>PORT SAID</option><option>SUEZ</option><option>MENYA</option><option value="Other">Other</option></select>
+<input id="to-port-other" placeholder="Enter port manually" style="display:none; margin-top:10px;" type="text"/>
+</div>
+</div>
+</div>
+<div class="section-title">Offer Details</div>
+<div class="row">
+<div>
+<label>Shipping Line:</label>
+<select id="shipping-line">
+<option disabled="" selected="" value="">Select Shipping Line</option>
+<option>APL</option>
+<option>Arkas</option>
+<option>Borchard Line</option>
+<option>CMA CGM</option>
+<option>Ecu Line</option>
+<option>EFS</option>
+<option>ESL</option>
+<option>Grimaldi</option>
+<option>Hapag Lloyd</option>
+<option>Maersk</option>
+<option>Medkon</option>
+<option>MSC</option>
+<option>One Shipping Line</option>
+<option>OOCL</option>
+<option>Saco</option>
+<option>Transmar</option>
+<option>Turkon</option>
+<option>Wan Hai</option>
+<option>ZIM</option>
+<option>Other</option>
+</select>
+<input id="shipping-line-other" placeholder="If other, specify" style="display:none; margin-top:5px;" type="text"/>
+<script>
+document.getElementById('shipping-line').addEventListener('change', function() {
+    document.getElementById('shipping-line-other').style.display = this.value === 'Other' ? 'block' : 'none';
+});
+</script>
+</div>
+<div>
+<label>T.T (Per Days):</label>
+<input id="tt" placeholder="e.g. 2-3 days" type="text"/>
+</div>
+<div>
+<label>Valid Until:</label>
+<input id="valid-until" placeholder="DD/MM/YYYY" type="text"/>
+</div>
+</div>
+<!-- Cost Description + Currency -->
+<div class="row" style="margin-top:20px;">
+<div>
+<label>Cost Description:</label>
+<button class="add-button" id="add-button">+</button>
+<div id="cost-description-container"></div>
+</div>
+<div style="flex:0.5">
+<label>Select Currency:</label>
+<select id="main-currency">
+<option disabled="" selected="" value="">Select Currency</option>
+<option>EGP</option>
+<option>EUR</option>
+<option>USD</option>
+</select>
+<input disabled="" id="currency-display" style="margin-top:10px;" type="text"/>
+</div>
+</div>
+<!-- Total & Buttons -->
+<label style="margin-top:20px;">Total Cost:</label>
+<input disabled="" id="total-cost" placeholder="Total cost" type="number"/>
+<div class="row" style="margin-top: 20px; justify-content: flex-end;">
+<button class="button" id="generate-pdf">Generate Quotation</button>
+<button class="reset-button" id="reset-button">Reset</button>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('date').value = new Date().toLocaleDateString('en-GB');
+    // autoformat date
+    const valid = document.getElementById('valid-until');
+    valid.addEventListener('input', e => autoFormatDate(e));
+    valid.addEventListener('blur', e => formatDate(e));
+
+    const dateInput = document.getElementById('date');
+    if (dateInput) { // لو مستخدمه
+        dateInput.addEventListener('input', e => autoFormatDate(e));
+        dateInput.addEventListener('blur', e => formatDate(e));
+    }
+
+    document.getElementById('main-currency').addEventListener('change', () => {
+        document.getElementById('currency-display').value = document.getElementById('main-currency').value;
+    });
+    document.getElementById('add-button').addEventListener('click', addCost);
+    document.getElementById('generate-pdf').addEventListener('click', generatePDF);
+    document.getElementById('reset-button').addEventListener('click', resetForm);
+
+$('#from-port, #to-port').select2();
+
+$('#from-port').change(function() {
+    if ($(this).val() === 'Other') {
+        $('#from-port-other').show();
+    } else {
+        $('#from-port-other').hide();
+    }
+});
+
+$('#to-port').change(function() {
+    if ($(this).val() === 'Other') {
+        $('#to-port-other').show();
+    } else {
+        $('#to-port-other').hide();
+    }
+});
+
+
+    // Show dimensions when Shipment Type is BB
+    $('#shipment-type').on('change', function () {
+        var shipment = $(this).val();
+        var dimensionsRow = document.getElementById('dimensions-row');
+        var message = document.getElementById('dimension-message');
+        var container = $('#container-size').val();
+
+        if (shipment === 'BB (Break Bulk)' || container === '20FT OT' || container === '40FT OT' || container === '40FT FR') {
+            dimensionsRow.style.display = 'flex';
+            message.style.display = 'block';
+        } else {
+            dimensionsRow.style.display = 'none';
+            message.style.display = 'none';
+        }
+    });
+
+
+    // Activate Select2
+    $('#port-loading').select2();
+    $('#port-discharge').select2();
+    $('#container-size').select2();
+
+    // Show Dimensions when specific containers selected
+    $('#container-size').on('select2:select', function (e) {
+        var selected = e.params.data.text;
+        var dimensionsRow = document.getElementById('dimensions-row');
+        var message = document.getElementById('dimension-message');
+
+        if (selected === '20FT OT' || selected === '40FT OT' || selected === '40FT FR' || document.getElementById('shipment-type').value === 'BB (Break Bulk)') {
+            dimensionsRow.style.display = 'flex';
+            message.style.display = 'block';
+        } else {
+            dimensionsRow.style.display = 'none';
+            message.style.display = 'none';
+        }
+    });
+
+    // Add message element inside dimensions row
+    const dimensionsRow = document.getElementById('dimensions-row');
+    const message = document.createElement('div');
+    message.className = 'message';
+    message.id = 'dimension-message';
+    message.innerText = '🔔 Kindly fill in the above dimensions!';
+    message.style.marginTop = '5px'; message.style.textAlign = 'center';
+    message.style.display = 'none';
+    dimensionsRow.parentNode.insertBefore(message, dimensionsRow.nextSibling);
+
+
+    function updateReferenceNo() {
+    const company = document.getElementById('company-name').value.trim();
+    const salesRep = document.getElementById('sales-rep').value.trim();
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.getMonth() + 1;
+    let salesInitials = '';
+
+    if (salesRep) {
+        const names = salesRep.split(' ');
+        if (names.length >= 2) {
+            salesInitials = names[0][0].toUpperCase() + names[1][0].toUpperCase();
+        }
+    }
+
+    if (company && salesInitials) {
+        document.getElementById('reference-no').value = `${company}-${day}-${month}-${salesInitials}`;
+    } else {
+        document.getElementById('reference-no').value = '';
+    }
+}
+document.getElementById('company-name').addEventListener('input', updateReferenceNo);
+document.getElementById('sales-rep').addEventListener('change', updateReferenceNo);
+
+});
+
+// split date
+function autoFormatDate(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length >= 3 && value.length <= 4) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
+    } else if (value.length > 4 && value.length <= 8) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4, 8);
+    }
+    e.target.value = value;
+}
+function formatDate(e) {
+    if (!e) return;
+    let date = e.target.value.replace(/\D/g, '');
+    if (date.length === 8) {
+        e.target.value = `${date.slice(0, 2)}/${date.slice(2, 4)}/${date.slice(4)}`;
+    }
+}
+
+function addCost() {
+    const currencySelected = document.getElementById('main-currency').value;
+    if (!currencySelected) {
+        alert('Please select currency first.');
+        return;
+    }
+    const div = document.createElement('div');
+    div.className = 'cost-item';
+    // 3 SELECTS => cost desc [0], currency [1], unit [2]
+    div.innerHTML = `
+        <select onchange="this.nextElementSibling.style.display = this.value==='custom'?'block':'none'">
+            <option value="" disabled selected>Select Cost</option>
+            <option>Pick up</option>
+            <option>Toll station</option>
+            <option>Customs Clearance</option>
+            <option>Origin THC</option>
+            <option>Sea Freight</option>
+            <option>BL</option>
+            <option>Ocean Freight</option>
+            <option>Customs Approvals</option>
+            <option>Packing</option>
+            <option>Handling</option>
+
+            <option value="custom">Other (Specify)</option>
+        </select>
+        <input type="text" class="custom-cost" placeholder="Specify Cost" style="display:none;">
+        <input type="number" class="amount" placeholder="Amount" oninput="updateTotalCost()">
+        <select class="currency">
+            <option>${currencySelected}</option>
+        </select>
+        <select>
+            <option value="" disabled selected>Select Unit</option>
+            <option>Container</option>
+            <option>CBM</option>
+            <option>Shipment</option>
+            <option>Approval</option>
+            <option>Box</option>
+        </select>
+        <button class="remove-button" onclick="this.parentElement.remove();updateTotalCost()">X</button>
+    `;
+    document.getElementById('cost-description-container').appendChild(div);
+}
+
+function updateTotalCost() {
+    let total = 0;
+    document.querySelectorAll('.amount').forEach(el => {
+        total += parseFloat(el.value) || 0;
+    });
+    document.getElementById('total-cost').value = total.toFixed(2);
+}
+
+function resetForm() {
+    document.getElementById('dimension-message').style.display = 'none';
+    
+    $('#from-port').val('').trigger('change');
+    $('#to-port').val('').trigger('change');
+    document.getElementById('from-port-other').style.display = 'none';
+    document.getElementById('to-port-other').style.display = 'none';
+
+    document.getElementById('dimensions-row').style.display = 'none';
+    document.querySelectorAll('input, select').forEach(el => {
+        if (el.tagName === 'SELECT') el.selectedIndex = 0;
+        else el.value = '';
+    });
+    document.getElementById('cost-description-container').innerHTML = '';
+    updateTotalCost();
+}
+
+
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.addImage('https://i.postimg.cc/d0dSgwZx/ss.png', 'PNG', 10, 10, 40, 12);
+    doc.setTextColor(0, 64, 128);
+doc.setFillColor(240, 248, 255);
+    doc.setFontSize(20);
+doc.setTextColor(33, 37, 41);
+doc.setFont('arial', 'bold');
+doc.setTextColor(30, 30, 30);
+doc.setFont('arial', 'bold');
+
+    doc.text('SHIPPING QUOTATION', 105, 25, { align: 'center' });
+
+    const today = new Date();
+    const issueDate = today.toLocaleDateString();
+    const dateVal = document.getElementById('date')?.value || '';
+    const referenceNo = document.getElementById('reference-no')?.value || '';
+    const companyName = document.getElementById('company-name')?.value || '';
+    const attention = document.getElementById('attention')?.value || '';
+    const shipmentType = document.getElementById('shipment-type')?.value || '';
+    const containerSize = document.getElementById('container-size')?.value || '';
+    const length = document.getElementById('length')?.value || '';
+    const width = document.getElementById('width')?.value || '';
+    const height = document.getElementById('height')?.value || '';
+    let containerDetails = containerSize;
+    if (length && width && height) {
+        containerDetails += ` (Dimensions: ${length} x ${width} x ${height} cm)`;
+    }
+
+    const fromPortSelect = $('#from-port').val();
+    const toPortSelect = $('#to-port').val();
+    const fromPort = fromPortSelect === 'Other' ? $('#from-port-other').val() : fromPortSelect;
+    const toPort = toPortSelect === 'Other' ? $('#to-port-other').val() : toPortSelect;
+
+    const portLoading = document.getElementById('port-loading')?.value || '';
+    const portDischarge = document.getElementById('port-discharge')?.value || '';
+    
+    const shippingLineSelect = document.getElementById('shipping-line')?.value || '';
+    const shippingLine = shippingLineSelect === 'Other'
+        ? document.getElementById('shipping-line-other')?.value || ''
+        : shippingLineSelect;
+    
+    const tt = document.getElementById('tt')?.value || '';
+    const validUntil = document.getElementById('valid-until')?.value || '';
+    const currency = document.getElementById('main-currency')?.value || '';
+    
+
+    doc.setFontSize(10);
+    doc.text(`Issue Date: ${issueDate}`, 10, 35);
+
+    doc.autoTable({
+    styles: { fontSize: 9, halign: 'center', font: 'helvetica', fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [250, 250, 250] },
+        startY: 40,
+        head: [['Quotation Details', '']],
+    headStyles: { fontStyle: 'bold', font: 'helvetica', fillColor: [0, 123, 255], lineColor: [0, 123, 255], textColor: 255 },
+        body: [
+            ['Date', dateVal],
+            ['Reference No', referenceNo],
+            ['Company Name', companyName],
+            ['Attention', attention],
+        ],
+        styles: { fontSize: 9, cellPadding: 3 },
+    });
+
+    const shipmentDetails = [
+        ['Shipment Type', shipmentType],
+        ['Container Size', containerDetails]
+    ];
+
+    if (fromPort && fromPort !== "Select From Port") {
+        shipmentDetails.push(['From', fromPort]);
+    }
+    if (toPort && toPort !== "Select To Port") {
+        shipmentDetails.push(['To', toPort]);
+    }
+
+    shipmentDetails.push(['Port of Loading', portLoading]);
+    shipmentDetails.push(['Port of Discharge', portDischarge]);
+
+    doc.autoTable({
+    styles: { fontSize: 9, halign: 'center', font: 'helvetica', fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [250, 250, 250] },
+        startY: doc.lastAutoTable.finalY + 10,
+        head: [['Shipment Details', '']],
+    headStyles: { fontStyle: 'bold', font: 'helvetica', fillColor: [0, 123, 255], lineColor: [0, 123, 255], textColor: 255 },
+        body: shipmentDetails,
+        styles: { fontSize: 9, cellPadding: 3 },
+        theme: 'striped',
+    });
+
+    doc.autoTable({
+    styles: { fontSize: 9, halign: 'center', font: 'helvetica', fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [250, 250, 250] },
+        startY: doc.lastAutoTable.finalY + 10,
+        head: [['Offer Details', '']],
+    headStyles: { fontStyle: 'bold', font: 'helvetica', fillColor: [0, 123, 255], lineColor: [0, 123, 255], textColor: 255 },
+        body: [
+            ['Shipping Line', shippingLine],
+            ['T.T (Per Days)', tt],
+            ['Valid Until', validUntil],
+            ['Currency', currency],
+        ],
+        styles: { fontSize: 9, cellPadding: 3 },
+        theme: 'striped',
+    });
+
+    const costItems = [];
+    document.querySelectorAll('.cost-item').forEach(row => {
+        const selects = row.querySelectorAll('select');
+        const desc = (selects[0].value === 'custom') ? row.querySelector('.custom-cost').value : selects[0].value;
+        const ccy = selects[1].value;
+        const unit = selects[2].value;
+        const amount = row.querySelector('.amount').value || '0';
+        costItems.push([desc, amount, ccy, unit]);
+    });
+
+    if (costItems.length) {
+        doc.autoTable({
+    styles: { fontSize: 9, halign: 'center', font: 'helvetica', fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [250, 250, 250] },
+            startY: doc.lastAutoTable.finalY + 10,
+            head: [['Description', 'Amount', 'Currency', 'Unit']],
+    headStyles: { fontStyle: 'bold', font: 'helvetica', fillColor: [0, 123, 255], lineColor: [0, 123, 255], textColor: 255 },
+            body: costItems,
+            styles: { fontSize: 9, cellPadding: 3 },
+            theme: 'striped',
+        });
+    }
+
+    
+
+    doc.setFontSize(9);
+    doc.setFontSize(7);
+
+    // Footer
+    const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+    doc.setDrawColor(220);
+    doc.line(10, pageHeight - 12, 200, pageHeight - 12);
+doc.setTextColor(50, 50, 50);
+doc.setFont('helvetica', 'normal');
+    doc.text('Sofitrans  |  Tel: +20 2414 9139  |  Email: ihab.wahby@sofitrans.com', 105, pageHeight - 6, { align: 'center' });
+
+    
+    // Add border with logo colors (Dark Blue)
+    doc.setDrawColor(0, 64, 128);
+doc.setFillColor(240, 248, 255);
+    doc.setLineWidth(0.5);
+    
+    
+    // Add new page for Terms & Conditions
+    doc.addPage();
+    doc.setTextColor(0, 64, 128);
+doc.setFillColor(240, 248, 255);
+    doc.setFontSize(14);
+    doc.setFont('arial', 'bold');
+    doc.setTextColor(0, 64, 128);
+doc.setFillColor(240, 248, 255);
+doc.setFontSize(14);
+doc.setFont('arial', 'bold');
+doc.setTextColor(0, 64, 128);
+doc.setFillColor(240, 248, 255);
+    doc.setFontSize(14);
+    doc.setFont('arial', 'bold');
+    doc.text('Terms & Conditions', 105, 20, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setTextColor(50, 50, 50);
+    doc.setFont('helvetica', 'normal');
+    doc.text('1. This quotation is valid until the date mentioned above.', 10, 40);
+    doc.text('2. Rates are subject to change without prior notice.', 10, 50);
+    doc.text('3. All charges are exclusive of VAT.', 10, 60);
+
+    doc.setFontSize(10);
+    doc.setTextColor(50, 50, 50);
+    doc.setFont('helvetica', 'normal');
+
+    
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+        doc.setFontSize(8);
+        doc.setTextColor(120);
+        doc.text(`Page ${i} of ${pageCount}`, 105, pageHeight - 2, { align: 'center' });
+    }
+
+    doc.save('Shipping_Quotation.pdf');
+    
+    
+}</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('company-name').addEventListener('input', updateReferenceNo);
+    document.getElementById('sales-rep').addEventListener('change', updateReferenceNo);
+
+    // Auto Uppercase Company Name
+    document.getElementById('company-name').addEventListener('input', function (e) {
+        e.target.value = e.target.value.toUpperCase();
+    });
+});
+
+function updateReferenceNo() {
+    const company = document.getElementById('company-name').value.trim();
+    const salesRep = document.getElementById('sales-rep').value.trim();
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.getMonth() + 1;
+    let salesInitials = '';
+
+    if (salesRep) {
+        const names = salesRep.split(' ');
+        if (names.length >= 2) {
+            salesInitials = names[0][0].toUpperCase() + names[1][0].toUpperCase();
+        }
+    }
+
+    if (company && salesInitials) {
+        document.getElementById('reference-no').value = `${company}-${day}-${month}-${salesInitials}`.toUpperCase();
+    } else {
+        document.getElementById('reference-no').value = '';
+    }
+}
+</script>
+</div>
+<script>
+    function animatePDFButton() {
+           });
+</script>
+
+</body>
+</html>
