@@ -1721,7 +1721,7 @@ $('#to-port').change(function() {
         var message = document.getElementById('dimension-message');
         var container = $('#container-size').val();
 
-        if (shipment === 'BB (Break Bulk)' || container === '20FT OT' || container === '40FT OT' || container === '40FT FR') {
+        if (shipment === 'BB (Break Bulk)' || container === '20ft OT' || container === '40ft OT' || container === '40ft FR') {
             dimensionsRow.style.display = 'flex';
             message.style.display = 'block';
         } else {
@@ -1742,7 +1742,7 @@ $('#to-port').change(function() {
         var dimensionsRow = document.getElementById('dimensions-row');
         var message = document.getElementById('dimension-message');
 
-        if (selected === '20FT OT' || selected === '40FT OT' || selected === '40FT FR' || document.getElementById('shipment-type').value === 'BB (Break Bulk)') {
+        if (selected === '20ft OT' || selected === '40ft OT' || selected === '40ft FR' || document.getElementById('shipment-type').value === 'BB (Break Bulk)') {
             dimensionsRow.style.display = 'flex';
             message.style.display = 'block';
         } else {
